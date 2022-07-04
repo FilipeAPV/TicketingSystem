@@ -18,7 +18,7 @@ I'll try, as much as possible, to document the thought process that motivated my
 
 ### Program Flow
 
-1. User raises tickets via form
+1. User raises tickets via form (after registration)
 2. All tickets are redirected to a _dispatcher_ that sends them to the correct department.
 3. Each department has a _SuperUser_ that assigns the ticket
 
@@ -32,7 +32,8 @@ I'll try, as much as possible, to document the thought process that motivated my
 
 - Authentication & Authorization
 
-  - Roles: user, superuser, admin
+  - Roles: anonymous, user, superuser, admin
+    - anonymous: access register form
     - user: open tickets, list tickets opened by himself, update and delete these.
     - superuser: assign tickets, comment on all tickets assigned to his department, change assignee.
     - admin: view all tickets from all departments, classify tickets as invalid, determine department superusers
@@ -48,4 +49,5 @@ I'll try, as much as possible, to document the thought process that motivated my
   - Form fields need to be validated
 
 - List of items (Users, Messages, etc)
+  - List tickets per assignee, department,
   - Need to be easily sorted and offer pagination
