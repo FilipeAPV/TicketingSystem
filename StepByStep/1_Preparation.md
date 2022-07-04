@@ -48,3 +48,5 @@ spring.thymeleaf.prefix=file:src/main/resources/templates/
   ![index.html](Img/3.png)
 
 # 7. I'll create the required entities as per the initial plan
+
+![Entities](Img/4.png)
