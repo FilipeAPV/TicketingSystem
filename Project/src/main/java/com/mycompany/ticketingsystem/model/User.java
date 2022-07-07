@@ -1,18 +1,45 @@
-package model;
+package com.mycompany.ticketingsystem.model;
 
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "users")
 public class User extends BaseEntity{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private int id;
+
+    @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "last_name")
     private String lastName;
+
+    @Column(name = "job_title")
     private String jobTitle;
+
     private String email;
+
+    @Transient
     private String confirmEmail;
-    private Boolean superUser = false;
-    private Department department;
+
     private String manager;
+
     private String password;
+
+    @Transient
     private String confirmPassword;
-    private String role;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "fk_department_id", referencedColumnName = "department_id")
+    private Department department;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "creator")
+    private Set<Ticket> ticketsList = new HashSet();
 
     public int getId() {
         return id;
@@ -62,14 +89,6 @@ public class User extends BaseEntity{
         this.confirmEmail = confirmEmail;
     }
 
-    public Boolean getSuperUser() {
-        return superUser;
-    }
-
-    public void setSuperUser(Boolean superUser) {
-        this.superUser = superUser;
-    }
-
     public Department getDepartment() {
         return department;
     }
@@ -102,11 +121,25 @@ public class User extends BaseEntity{
         this.confirmPassword = confirmPassword;
     }
 
-    public String getRole() {
-        return role;
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", jobTitle='" + jobTitle + '\'' +
+                ", email='" + email + '\'' +
+                ", manager='" + manager + '\'' +
+                ", password='" + password + '\'' +
+                ", department=" + department.getName() +
+                '}';
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public Set<Ticket> getTicketsList() {
+        return ticketsList;
+    }
+
+    public void setTicketsList(Ticket ticket) {
+        this.ticketsList.add(ticket);
     }
 }
