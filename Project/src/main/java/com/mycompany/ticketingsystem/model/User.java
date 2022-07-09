@@ -39,7 +39,10 @@ public class User extends BaseEntity{
     private Department department;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "creator")
-    private Set<Ticket> ticketsList = new HashSet();
+    private Set<Ticket> createdTicketsList = new HashSet();
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "assignee")
+    private Set<Ticket> assignedTicketsList = new HashSet();
 
     public int getId() {
         return id;
@@ -135,11 +138,11 @@ public class User extends BaseEntity{
                 '}';
     }
 
-    public Set<Ticket> getTicketsList() {
-        return ticketsList;
+    public Set<Ticket> getCreatedTicketsList() {
+        return createdTicketsList;
     }
 
-    public void setTicketsList(Ticket ticket) {
-        this.ticketsList.add(ticket);
+    public void setCreatedTicketsList(Ticket ticket) {
+        this.createdTicketsList.add(ticket);
     }
 }

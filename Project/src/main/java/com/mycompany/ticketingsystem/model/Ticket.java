@@ -18,7 +18,7 @@ public class Ticket extends BaseEntity{
     @JoinColumn(name = "creator_id", referencedColumnName = "user_id")
     private User creator;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "assignee_id", referencedColumnName = "user_id", nullable = true)
     private User assignee;
 

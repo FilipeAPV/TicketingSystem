@@ -3,17 +3,20 @@ package com.mycompany.ticketingsystem.repository;
 import com.mycompany.ticketingsystem.model.Department;
 import com.mycompany.ticketingsystem.model.Ticket;
 import com.mycompany.ticketingsystem.model.User;
-import com.mycompany.ticketingsystem.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.stereotype.Repository;
+import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // Disable in memory db support.
 class UserRepositoryTest{
 
     @Autowired
@@ -22,9 +25,13 @@ class UserRepositoryTest{
     @Autowired
     private TicketRepository ticketRepository;
 
+    @Autowired
+    private DepartmentRepository departmentRepository;
+
     User userTest = new User();
     Department departmentTest = new Department();
     Ticket ticketTest = new Ticket();
+    Ticket ticketTest1 = new Ticket();
 
     @BeforeEach
     void setUp() {
@@ -37,13 +44,18 @@ class UserRepositoryTest{
         userTest.setCreatedBy("JUnit Test");
         userTest.setCreatedAt(LocalDateTime.now());
 
+        //IT
+        Department dep = departmentRepository.findById(1).get();
+
+        userTest.setDepartment(dep);
+        dep.setUserList(userTest);
+
         departmentTest.setName("HR");
-        departmentTest.setSuperUser_id(1);
+        departmentTest.setSuperUser_id(userTest);
         departmentTest.setCreatedAt(LocalDateTime.now());
         departmentTest.setCreatedBy("JUnit Test");
 
-        userTest.setDepartment(departmentTest);
-        departmentTest.setUserList(userTest);
+
 
         ticketTest.setStatus("Open");
         ticketTest.setSubject("This is a subject test");
@@ -53,13 +65,22 @@ class UserRepositoryTest{
         ticketTest.setCreatedBy("JUnit Test");
 
         ticketTest.setCreator(userTest);
-        userTest.setTicketsList(ticketTest);
+        userTest.setCreatedTicketsList(ticketTest);
 
+        ticketTest1.setStatus("Open");
+        ticketTest1.setSubject("Test2");
+        ticketTest1.setPriority("High");
+        ticketTest1.setMessage("Message Test");
+        ticketTest1.setCreatedAt(LocalDateTime.now());
+        ticketTest1.setCreatedBy("JUnit Test");
 
-        // add ticket to list with setter
+        ticketTest1.setCreator(userTest);
+        userTest.setCreatedTicketsList(ticketTest1);
+
     }
 
     @Test
+    @Rollback(false)
     public void savingUser() {
         User savedUser = userRepository.save(userTest);
 
@@ -67,17 +88,49 @@ class UserRepositoryTest{
         System.out.println(savedUser.getDepartment());
         System.out.println(savedUser.getDepartment().getUserList());
 
-        assertThat(savedUser).isNotNull();
+        assertThat(savedUser.getId()).isEqualTo(6);
+        assertThat(savedUser.getDepartment().getId()).isEqualTo(1);
+
     }
 
     @Test
+    @Rollback(false)
     public void savingTicket() {
         Ticket savedTicket = ticketRepository.save(ticketTest);
 
         System.out.println(savedTicket);
         System.out.println(savedTicket.getCreator());
-        System.out.println(savedTicket.getCreator().getTicketsList());
+        System.out.println(savedTicket.getCreator().getCreatedTicketsList());
 
         assertThat(savedTicket).isNotNull();
+        assertThat(savedTicket.getId()).isGreaterThan(0);
+    }
+
+    @Test
+    @Rollback(false)
+    public void sameUserCreatesAnotherTicket() {
+
+        Ticket savedTicket = ticketRepository.save(ticketTest1);
+
+        System.out.println(savedTicket);
+        System.out.println(savedTicket.getCreator());
+        System.out.println(savedTicket.getCreator().getCreatedTicketsList());
+
+        assertThat(savedTicket).isNotNull();
+        assertThat(savedTicket.getId()).isGreaterThan(0);
+    }
+
+    @Test
+    @Rollback(false)
+    public void addAssigneeToTicket() {
+
+        Ticket savedTicket = ticketRepository.save(ticketTest1);
+
+        System.out.println(savedTicket);
+        System.out.println(savedTicket.getCreator());
+        System.out.println(savedTicket.getCreator().getCreatedTicketsList());
+
+        assertThat(savedTicket).isNotNull();
+        assertThat(savedTicket.getId()).isGreaterThan(0);
     }
 }
