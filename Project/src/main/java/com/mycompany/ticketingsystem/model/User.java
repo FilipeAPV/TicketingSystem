@@ -1,6 +1,8 @@
 package com.mycompany.ticketingsystem.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,22 +15,29 @@ public class User extends BaseEntity{
     @Column(name = "user_id")
     private int id;
 
+    @NotBlank(message = "First name cannot be blank")
     @Column(name = "first_name")
     private String firstName;
 
+    @NotBlank(message = "Last name cannot be blank")
     @Column(name = "last_name")
     private String lastName;
 
+    @NotBlank(message = "Job title cannot be blank")
     @Column(name = "job_title")
     private String jobTitle;
 
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Please provide a valid email address")
     private String email;
 
     @Transient
     private String confirmEmail;
 
+    @NotBlank(message = "Manager name cannot be blank")
     private String manager;
 
+    @NotBlank(message = "Password cannot be blank")
     private String password;
 
     @Transient

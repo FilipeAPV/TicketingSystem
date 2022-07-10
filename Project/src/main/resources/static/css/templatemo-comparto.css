@@ -61,6 +61,11 @@ h1, h2, h3, h4, h5, h6 { color: #333; }
     margin-right: auto;
 }
 
+.link-mouse-pointer-like-btn {
+  cursor:pointer;
+}
+
+
 .tm-mb-0 { margin-bottom: 0; }
 .tm-mb-1 { margin-bottom: 20px; }
 .tm-mb-2 { margin-bottom: 40px; }

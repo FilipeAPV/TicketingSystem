@@ -18,6 +18,7 @@ of the subclass tables.
  */
 
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class) // Trigger the capturing of auditing information
 public class BaseEntity {
 
     @CreatedDate
