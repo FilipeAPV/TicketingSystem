@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.stereotype.Repository;
 import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDateTime;
@@ -51,7 +50,7 @@ class UserRepositoryTest{
         dep.setUserList(userTest);
 
         departmentTest.setName("HR");
-        departmentTest.setSuperUser_id(userTest);
+        departmentTest.setSuperUserId(userTest);
         departmentTest.setCreatedAt(LocalDateTime.now());
         departmentTest.setCreatedBy("JUnit Test");
 
@@ -90,7 +89,6 @@ class UserRepositoryTest{
 
         assertThat(savedUser.getId()).isEqualTo(6);
         assertThat(savedUser.getDepartment().getId()).isEqualTo(1);
-
     }
 
     @Test

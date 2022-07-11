@@ -16,7 +16,7 @@ public class Department extends BaseEntity{
 
     @OneToOne
     @JoinColumn(name = "super_user_id", referencedColumnName = "user_id", nullable = true)
-    private User superUser_id;
+    private User superUserId;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "department")
     private Set<User> userList = new HashSet<>();
@@ -50,16 +50,16 @@ public class Department extends BaseEntity{
         return "Department{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", superUser_id=" + superUser_id +
+                ", superUser_id=" + superUserId +
                 ", userList=" + userList +
                 '}';
     }
 
-    public User getSuperUser_id() {
-        return superUser_id;
+    public User getSuperUserId() {
+        return superUserId;
     }
 
-    public void setSuperUser_id(User superUser_id) {
-        this.superUser_id = superUser_id;
+    public void setSuperUserId(User superUserId) {
+        this.superUserId = superUserId;
     }
 }
