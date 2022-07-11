@@ -1,5 +1,7 @@
 package com.mycompany.ticketingsystem.model;
 
+import com.mycompany.ticketingsystem.annotation.FieldsValueMatch;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -8,6 +10,18 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@FieldsValueMatch.List({
+        @FieldsValueMatch(
+                field = "password",
+                fieldMatch = "confirmPassword",
+                message = "Passwords must match"
+        ),
+        @FieldsValueMatch(
+                field = "email",
+                fieldMatch = "confirmEmail",
+                message = "Email addresses must match"
+        )
+})
 public class User extends BaseEntity{
 
     @Id

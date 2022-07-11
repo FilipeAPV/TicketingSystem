@@ -4,6 +4,7 @@ import com.mycompany.ticketingsystem.model.Department;
 import com.mycompany.ticketingsystem.model.User;
 import com.mycompany.ticketingsystem.repository.DepartmentRepository;
 import com.mycompany.ticketingsystem.repository.UserRepository;
+import com.mycompany.ticketingsystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,11 +24,14 @@ public class RegistrationController {
 
     private final DepartmentRepository departmentRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public RegistrationController(DepartmentRepository departmentRepository, UserRepository userRepository) {
+    public RegistrationController(DepartmentRepository departmentRepository, UserRepository userRepository,
+                                  UserService userService) {
         this.departmentRepository = departmentRepository;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @GetMapping("/registrationForm")
@@ -47,8 +51,6 @@ public class RegistrationController {
     @PostMapping("/saveRegistrationForm")
     public String saveRegistrationForm(@Valid @ModelAttribute("newUser") User user, Errors errors,
                                        Model model, HttpSession httpSession) {
-        //TODO error verification
-        //TODO persistence strategy, inclufing login?val=true
 
         if (errors.hasErrors()) {
             List<User> userList = (List<User>) httpSession.getAttribute("departmentList");
@@ -56,8 +58,13 @@ public class RegistrationController {
             return "register";
         }
 
-        User savedUser = userRepository.save(user);
-            return "redirect:/public/login";
+        boolean isSaved = userService.saveUser(user);
+        if (isSaved){
+            return "redirect:/public/login?successRegistered=true";
+        } else {
+            return "register";
+        }
+
     }
 
 }

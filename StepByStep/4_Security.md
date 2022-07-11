@@ -81,3 +81,90 @@ public class SecurityConfiguration {
          1. If the user authenticates successfully, it will be redirected to **"/dashboard"**
 
          2. Else, it will be redirected to **"/public/login?error=true"**
+
+# 2.2 Data validation
+
+I've used the Jakarta Bean Validation project to validate our user fields. It's important to note that client side validations, via HTML attribute `required=""` are easily circumvented.
+
+- The **default validations** are pretty straight forward to apply:
+
+```
+@NotBlank(message = "Email cannot be blank")
+@Email(message = "Please provide a valid email address")
+private String email;
+```
+
+- **Custom validations** require some more code. Example of a custom validation that compares two fields for equality, used for the email and password fields.
+
+  - Create annotation @FieldsValueMatch:
+
+  ```
+  @Constraint(validatedBy = FieldsValueMatchValidator.class) // Class that holds the logic
+  @Target({ElementType.TYPE}) // Applies to Class, interfaces, etc
+  @Retention(RetentionPolicy.RUNTIME) // Validation happens at runtime
+  public @interface FieldsValueMatch {
+      Class<?>[] groups() default {};
+      Class<? extends Payload>[] payload() default {};
+
+      String message() default "Field values don't match!";
+
+      String field();
+
+      String fieldMatch();
+
+      @Target({ ElementType.TYPE })
+      @Retention(RetentionPolicy.RUNTIME)
+      @interface List {
+          FieldsValueMatch[] value();
+      }
+  }
+  ```
+
+  - Create validation logic
+
+    ```
+    public class FieldsValueMatchValidator implements ConstraintValidator<FieldsValueMatch, Object> {
+    // We'll accept the entire POJO and perform the validation on two of it's fields
+
+        private String field;
+        private String fieldMatch;
+
+        @Override
+        public void initialize(FieldsValueMatch constraintAnnotation) {
+            this.field = constraintAnnotation.field();
+            this.fieldMatch = constraintAnnotation.fieldMatch();
+        }
+
+        @Override
+        public boolean isValid(Object value, ConstraintValidatorContext context) {
+            Object fieldValue = new BeanWrapperImpl(value)
+                    .getPropertyValue(field);
+            Object fieldMatchValue = new BeanWrapperImpl(value)
+                    .getPropertyValue(fieldMatch);
+            if (fieldValue != null) {
+                return fieldValue.equals(fieldMatchValue);
+            } else {
+                return fieldMatchValue == null;
+            }
+        }
+
+    }
+    ```
+
+    - Annotate the User entity with @FieldsValueMatch
+
+    ```
+    @FieldsValueMatch.List({
+        @FieldsValueMatch(
+                field = "password",
+                fieldMatch = "confirmPassword",
+                message = "Passwords must match"
+        ),
+        @FieldsValueMatch(
+                field = "email",
+                fieldMatch = "confirmEmail",
+                message = "Email addresses must match"
+        )
+    })
+    public class User extends BaseEntity{
+    ```

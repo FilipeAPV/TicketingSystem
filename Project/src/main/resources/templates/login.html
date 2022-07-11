@@ -30,6 +30,9 @@ https://templatemo.com/tm-544-comparto
                     </div>
                 </div>
                 <div class="contact-form-outer">
+                    <ul>
+                        <li th:if="${!#strings.isEmpty(message)}" th:text="${message}"/>
+                    </ul>
                     <form id="contact-form" action="" method="POST" class="tm-bg-color-6 tm-contact-form">
                         <div class="form-group">
                             <input type="email" name="email" class="form-control" placeholder="Email" required="" />
