@@ -51,7 +51,7 @@ public class Department extends BaseEntity{
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", superUser_id=" + superUserId +
-                ", userList=" + userList +
+                //", userList=" + userList + - commented on 11/07/2022 because LazyInitializationException with Spring Security
                 '}';
     }
 

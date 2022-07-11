@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class LoginController {
     @GetMapping("/login")
     public String showLogin(Model model,
-                            @RequestParam(value = "successRegistered", required = false) String successRegistered) {
+                            @RequestParam(value = "successRegistered", required = false) String successRegistered,
+                            @RequestParam(value = "error", required = false) String errorLogin) {
         String message = null;
         if (successRegistered != null) {
             message = "User successfully registered. Please Login";
+        } else if (errorLogin != null) {
+            message = "Invalid Credentials";
         }
         model.addAttribute("message", message);
         return "login";

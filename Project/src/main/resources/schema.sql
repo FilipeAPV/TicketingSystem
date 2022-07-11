@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS `users` (
     `email` varchar(100) NOT NULL,
     `manager` varchar(100) NOT NULL,
     `password` varchar(300) NOT NULL,
+    `role` varchar(100) NOT NULL,
     `created_at` TIMESTAMP NOT NULL,
     `created_by` varchar(50) NOT NULL,
     `updated_at` TIMESTAMP DEFAULT NULL,

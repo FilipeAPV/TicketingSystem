@@ -1,6 +1,7 @@
 package com.mycompany.ticketingsystem.model;
 
 import com.mycompany.ticketingsystem.annotation.FieldsValueMatch;
+import com.mycompany.ticketingsystem.constants.Constants;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -56,6 +57,8 @@ public class User extends BaseEntity {
 
     @Transient
     private String confirmPassword;
+
+    private String role = Constants.ROLE_USER;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "fk_department_id", referencedColumnName = "department_id")
@@ -167,5 +170,13 @@ public class User extends BaseEntity {
 
     public void setCreatedTicketsList(Ticket ticket) {
         this.createdTicketsList.add(ticket);
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
