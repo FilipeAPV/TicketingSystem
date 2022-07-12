@@ -14,7 +14,7 @@ public class Ticket extends BaseEntity{
     private String priority;
     private String message;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "creator_id", referencedColumnName = "user_id")
     private User creator;
 

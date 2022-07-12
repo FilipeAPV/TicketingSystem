@@ -6,6 +6,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 public class UserDTO {
+    private int id;
+
     @NotBlank(message = "First name cannot be blank")
     private String firstName;
 
@@ -101,5 +103,13 @@ public class UserDTO {
 
     public void setDepartment(Department department) {
         this.department = department;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
