@@ -30,9 +30,9 @@ https://templatemo.com/tm-544-comparto
                     </div>
                 </div>
                 <div class="contact-form-outer">
-<!--                    <ul>
-                        <li th:each="error : ${#fields.errors('newUser.*')}" th:text="${error}" />
-                    </ul>-->
+                    <ul>
+                        <li th:each="error : ${#fields.errors('ticket.*')}" th:text="${error}" />
+                    </ul>
                     <ul>
                         <li th:if="${!#strings.isEmpty(message)}" th:text="${message}"/>
                     </ul>

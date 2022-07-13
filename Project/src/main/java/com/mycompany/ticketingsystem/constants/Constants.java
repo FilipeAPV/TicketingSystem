@@ -18,4 +18,6 @@ public interface Constants {
     public static final String TICKET_PRIORITY_URGENT = "URGENT";
 
     List<String> ticketPriority = List.of(TICKET_PRIORITY_STANDARD, TICKET_PRIORITY_URGENT);
+
+    public static final String DASHBOARD = "dashboard";
 }

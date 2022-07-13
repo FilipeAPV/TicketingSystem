@@ -3,10 +3,15 @@ package com.mycompany.ticketingsystem.dto;
 import com.mycompany.ticketingsystem.constants.Constants;
 import com.mycompany.ticketingsystem.model.User;
 
+import javax.validation.constraints.NotBlank;
+
 public class TicketDTO {
     private String status = Constants.TICKET_STATUS_OPEN;
+
+    @NotBlank(message = "Subject field cannot be blank")
     private String subject;
     private String priority;
+    @NotBlank(message = "Message field cannot be blank")
     private String message;
     private User creator;
 
