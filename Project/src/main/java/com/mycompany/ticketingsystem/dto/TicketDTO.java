@@ -4,6 +4,7 @@ import com.mycompany.ticketingsystem.constants.Constants;
 import com.mycompany.ticketingsystem.model.User;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 public class TicketDTO {
     private String status = Constants.TICKET_STATUS_OPEN;
@@ -14,6 +15,7 @@ public class TicketDTO {
     @NotBlank(message = "Message field cannot be blank")
     private String message;
     private User creator;
+    private LocalDateTime createdAt;
 
     public String getStatus() {
         return status;
@@ -53,5 +55,13 @@ public class TicketDTO {
 
     public void setCreator(User creator) {
         this.creator = creator;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

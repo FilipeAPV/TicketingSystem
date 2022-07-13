@@ -62,10 +62,10 @@ https://templatemo.com/tm-544-comparto
                 </div>
                 <div class="contact-info-outer">
                     <div class="tm-bg-color-6 contact-info">
-                        <p>Please, fill in the description as precisely as possible. </p>
-                        <p>If you face any technical issues, do not hesitate to email us.</p>
-                        <p class="tm-mb-0">Tel: <a href="tel:0100200990">010-020-0990</a></p>
-                        <p>Email: <a href="mailto:info@company.com">info@company.com</a></p>
+                        <div>
+                        <a th:href="@{/listTickets?list=created}" class="ml-auto tm-btn tm-btn-3 link-mouse-pointer-like-btn" >Created Tickets</a>
+                        <a th:href="@{/public/registrationForm}" class="ml-auto tm-btn tm-btn-3 link-mouse-pointer-like-btn" >Assigned Tickets</a>
+                        </div>
                     </div>
                 </div>
             </div>

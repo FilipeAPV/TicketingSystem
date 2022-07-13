@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
@@ -26,7 +27,6 @@ public class DashboardController {
     private UserRepository userRepository;
     private ModelMapper modelMapper;
     private TicketService ticketService;
-    private User userLoggedIn;
     private UserDTO userLoggedInDTO;
 
     @Autowired
@@ -39,11 +39,13 @@ public class DashboardController {
 
     @GetMapping("/dashboard")
     public String getDashboard(Authentication authentication, Model model,
-                               @RequestParam(value = "saved", required = false) String isSaved) {
+                               @RequestParam(value = "saved", required = false) String isSaved,
+                               HttpSession httpSession) {
 
         //TODO if the only need of the model attribute is to pass the first name, then we need to send only
         //the string
-        userLoggedIn  = userRepository.findByEmail(authentication.getName());
+        User userLoggedIn  = userRepository.findByEmail(authentication.getName());
+        httpSession.setAttribute("userLoggedIn", userLoggedIn);
         userLoggedInDTO = modelMapper.map(userLoggedIn, UserDTO.class);
 
         String message = null;
@@ -61,7 +63,7 @@ public class DashboardController {
 
     @PostMapping("/saveTicket")
     public String saveTicket(@Valid @ModelAttribute("ticket") TicketDTO ticketDTO,
-                             Errors errors, Model model) {
+                             Errors errors, Model model, HttpSession httpSession) {
 
         if (errors.hasErrors()) {
             model.addAttribute("priorityList", Constants.ticketPriority);
@@ -70,6 +72,7 @@ public class DashboardController {
         }
 
         Ticket ticketToSave = modelMapper.map(ticketDTO, Ticket.class);
+        User userLoggedIn = (User) httpSession.getAttribute("userLoggedIn");
         Boolean isSaved = ticketService.saveTicket(ticketToSave, userLoggedIn);
 
         if (Boolean.TRUE.equals(isSaved)) { // Does not throw NPE if isSaved is null. It will take it as false.
