@@ -1,0 +1,140 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    outline: none;
+}
+
+ul, h1, h2, h3, h4, p, figure {
+    padding: 0;
+    margin: 0;
+}
+
+.center-table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.table--header {
+    font-family: "Roboto", "Arial", "Helvetica Neue", sans-serif;
+    font-size: 16px;
+    height: 50px;
+}
+
+.styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+.styled-table thead tr {
+    background-color: #99CC99;
+    color: #ffffff;
+    text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+    text-align: center;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #99CC99;
+}
+
+.styled-table input[type="submit"]{
+    width: 50%;
+    padding: 1%;
+    background: #99CC99;
+    border-bottom: 2px solid #30C29E;
+    border-top-style: none;
+    border-right-style: none;
+    border-left-style: none;
+    color: #fff;
+}
+
+.styled-table input[type="text"],
+.styled-table input[type="password"] {
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -ms-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    width: 100%;
+    background: #fff;
+    margin-bottom: 4%;
+    border: 1px solid #ccc;
+    padding: 3%;
+    color: #555;
+    font: 95% Arial, Helvetica, sans-serif;
+}
+
+.styled-table p {
+    margin-bottom: 4%;
+    padding: 3%;
+    color: #555;
+    font: 95% Arial, Helvetica, sans-serif;
+}
+
+.updateAndDelete a {
+    text-decoration: none;
+    color: #0fb88b;
+    font-weight: bold;
+}
+
+.updateAndDelete a:hover {
+    color: #99CC99;
+}
+
+/* Contact */
+.tm-contact-title {
+    padding-top: 55px;
+    padding-bottom: 60px;
+    text-align: center;
+}
+
+.tm-social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.tm-bg-color-5 { background-color: #99CC99; }
+.tm-text-white { color: #fff; }
+
+.tm-btn {
+    display: inline-block;
+    padding: 15px 40px;
+    font-size: 1.1rem;
+    border: none;
+    background-color: #CC9999;
+    color: white;
+    text-decoration:none;
+}
+
+.tm-btn:hover {
+    color: white;
+    background-color: #875959;
+}
+
+.tm-btn-3 { background-color: #99CC99; }
+.tm-btn-3:hover { background-color: #547d54; }
+
+.link-mouse-pointer-like-btn {
+    cursor:pointer;
+}

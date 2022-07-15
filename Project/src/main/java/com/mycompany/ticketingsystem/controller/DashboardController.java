@@ -28,6 +28,7 @@ public class DashboardController {
     private ModelMapper modelMapper;
     private TicketService ticketService;
     private UserDTO userLoggedInDTO;
+    private Ticket ticketToEdit;
 
     @Autowired
     public DashboardController(UserRepository userRepository, ModelMapper modelMapper,
@@ -40,6 +41,7 @@ public class DashboardController {
     @GetMapping("/dashboard")
     public String getDashboard(Authentication authentication, Model model,
                                @RequestParam(value = "saved", required = false) String isSaved,
+                               @RequestParam(value = "ticketId", required = false) Integer ticketId,
                                HttpSession httpSession) {
 
         //TODO if the only need of the model attribute is to pass the first name, then we need to send only
@@ -53,8 +55,15 @@ public class DashboardController {
             message = "Ticket created successfully";
         }
 
+        if (ticketId != null && ticketId > 0) {
+            ticketToEdit = ticketService.getTicketById(ticketId);
+            TicketDTO ticketToEditDTO = modelMapper.map(ticketToEdit, TicketDTO.class);
+            model.addAttribute("ticket", ticketToEditDTO);
+        } else {
+            model.addAttribute("ticket", new TicketDTO());
+        }
+
         model.addAttribute("userLoggedIn", userLoggedInDTO);
-        model.addAttribute("ticket", new TicketDTO());
         model.addAttribute("priorityList", Constants.ticketPriority);
         model.addAttribute("message", message);
 
@@ -71,14 +80,24 @@ public class DashboardController {
             return Constants.DASHBOARD;
         }
 
+        if (ticketToEdit != null && ticketToEdit.getId() > 0) {
+            ticketDTO.setId(ticketToEdit.getId());
+            ticketDTO.setCreator(ticketToEdit.getCreator());
+            ticketDTO.setCreatedAt(ticketToEdit.getCreatedAt());
+            ticketDTO.setAssignee(ticketToEdit.getAssignee());
+        }
+
         Ticket ticketToSave = modelMapper.map(ticketDTO, Ticket.class);
         User userLoggedIn = (User) httpSession.getAttribute("userLoggedIn");
         Boolean isSaved = ticketService.saveTicket(ticketToSave, userLoggedIn);
 
-        if (Boolean.TRUE.equals(isSaved)) { // Does not throw NPE if isSaved is null. It will take it as false.
+        if (Boolean.TRUE.equals(isSaved) && !(ticketToEdit!=null)) { // Does not throw NPE if isSaved is null. It will take it as false.
             return "redirect:/dashboard?saved=true";
+        } else {
+            return "redirect:/listTickets?list=created";
         }
 
-        return Constants.DASHBOARD;
+        //return Constants.DASHBOARD;
     }
+
 }

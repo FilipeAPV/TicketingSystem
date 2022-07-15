@@ -9,5 +9,6 @@ import java.util.List;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Integer> {
-    List<Ticket> findByCreatorOrderByCreatedAt(User user);
+    List<Ticket> findByCreatorAndStatusOrderByCreatedAt(User user, String status);
+    List<Ticket> findByAssigneeAndStatusOrderByCreatedAt(User user, String status);
 }

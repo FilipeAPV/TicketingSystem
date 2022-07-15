@@ -7,8 +7,8 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 public class TicketDTO {
+    private int id;
     private String status = Constants.TICKET_STATUS_OPEN;
-
     @NotBlank(message = "Subject field cannot be blank")
     private String subject;
     private String priority;
@@ -16,6 +16,7 @@ public class TicketDTO {
     private String message;
     private User creator;
     private LocalDateTime createdAt;
+    private User assignee;
 
     public String getStatus() {
         return status;
@@ -63,5 +64,21 @@ public class TicketDTO {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
     }
 }
