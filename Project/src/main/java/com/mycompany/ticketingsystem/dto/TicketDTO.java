@@ -14,6 +14,7 @@ public class TicketDTO {
     private String priority;
     @NotBlank(message = "Message field cannot be blank")
     private String message;
+    private String addMessage;
     private User creator;
     private LocalDateTime createdAt;
     private User assignee;
@@ -80,5 +81,13 @@ public class TicketDTO {
 
     public void setAssignee(User assignee) {
         this.assignee = assignee;
+    }
+
+    public String getAddMessage() {
+        return addMessage;
+    }
+
+    public void setAddMessage(String addMessage) {
+        this.addMessage = addMessage;
     }
 }

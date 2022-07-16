@@ -7,6 +7,7 @@ import com.mycompany.ticketingsystem.model.Ticket;
 import com.mycompany.ticketingsystem.model.User;
 import com.mycompany.ticketingsystem.repository.TicketRepository;
 import com.mycompany.ticketingsystem.service.TicketService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,14 +26,17 @@ public class ListTicketsController {
     private TicketService ticketService;
     private TicketRepository ticketRepository;
     private HttpSession httpSession;
+    private ModelMapper modelMapper;
 
     @Autowired
     public ListTicketsController(TicketService ticketService,
                                  TicketRepository ticketRepository,
-                                 HttpSession httpSession) {
+                                 HttpSession httpSession,
+                                 ModelMapper modelMapper) {
         this.ticketService = ticketService;
         this.ticketRepository = ticketRepository;
         this.httpSession = httpSession;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping("/listTickets")
@@ -57,6 +61,22 @@ public class ListTicketsController {
 
         return "list-tickets";
     }
+
+    @GetMapping("/editTicket")
+    public String editTicket(@RequestParam("ticketId") int ticketId,
+                             @RequestParam("relationship") String relationshipWithUser,
+                             Model model, HttpSession httpSession) {
+        Ticket ticketToEdit = ticketService.getTicketById(ticketId);
+        TicketDTO ticketToEditDTO = modelMapper.map(ticketToEdit, TicketDTO.class);
+        model.addAttribute("ticket", ticketToEditDTO);
+        model.addAttribute("priorityList", Constants.ticketPriority);
+        model.addAttribute("relationshipWithUser", relationshipWithUser);
+
+        httpSession.setAttribute("ticketToEdit", ticketToEdit);
+
+        return "update-tickets";
+    }
+
 
     @GetMapping("/closeTicket")
     public String deleteTicket(@RequestParam("ticketId") int id) {

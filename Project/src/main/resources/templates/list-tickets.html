@@ -34,11 +34,12 @@
             <tbody>
             <tr th:each="ticket: ${listTicketsCreated}">
                 <td><p th:text="${ticket.subject}"></p></td>
-                <td><p th:text="${ticket.message}"></p></td>
+                <td><textarea th:text="${ticket.message}" rows="6" cols="50" name="message" class="form-control" placeholder="New Message..."
+                              required="" disabled></textarea></td>
                 <td><p th:text="${ticket.priority}"></p></td>
                 <td><p th:text="${ticket.createdAt}"></p></td>
-                <td class="updateAndDelete">
-                    <p><a th:href="@{/dashboard(ticketId=${ticket.id}, assigned=${assigned})}">Update</a></p>
+                <td class="updateAndDelete" th:with="link=${message == 'CREATED TICKETS' ? 'CREATED' : 'ASSIGNED'}">
+                    <p><a th:href="@{/editTicket(ticketId=${ticket.id},relationship=${link})}">Update</a></p>
                     <p><a th:href="@{/closeTicket(ticketId=${ticket.id})}">Close</a></p>
                 </td>
             </tr>
@@ -51,7 +52,6 @@
     <div>
         <a th:href="@{/dashboard}" class="tm-btn tm-btn-3 link-mouse-pointer-like-btn">DASHBOARD</a>
     </div>
-
 </footer>
 </div> <!-- .container -->
 </body>
