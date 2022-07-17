@@ -6,6 +6,7 @@ import com.mycompany.ticketingsystem.constants.Constants;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ import java.util.Set;
                 message = "Email addresses must match"
         )
 })
-public class User extends BaseEntity {
+public class User extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

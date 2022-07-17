@@ -2,8 +2,10 @@ package com.mycompany.ticketingsystem.service;
 
 import com.mycompany.ticketingsystem.constants.Constants;
 import com.mycompany.ticketingsystem.dto.UserDTO;
+import com.mycompany.ticketingsystem.model.Department;
 import com.mycompany.ticketingsystem.model.Ticket;
 import com.mycompany.ticketingsystem.model.User;
+import com.mycompany.ticketingsystem.repository.DepartmentRepository;
 import com.mycompany.ticketingsystem.repository.TicketRepository;
 import org.apache.catalina.session.StandardSession;
 import org.apache.catalina.session.StandardSessionFacade;
@@ -17,10 +19,13 @@ import java.util.List;
 @Service
 public class TicketService {
     private TicketRepository ticketRepository;
+    private DepartmentRepository departmentRepository;
 
     @Autowired
-    public TicketService(TicketRepository ticketRepository) {
+    public TicketService(TicketRepository ticketRepository,
+                         DepartmentRepository departmentRepository) {
         this.ticketRepository = ticketRepository;
+        this.departmentRepository = departmentRepository;
     }
 
     public Ticket getTicketById(int id) {
@@ -33,6 +38,14 @@ public class TicketService {
 
     public List<Ticket> getListOfTicketsByAssignee(User userLoggedIn) {
         return ticketRepository.findByAssigneeAndStatusOrderByCreatedAt(userLoggedIn, Constants.TICKET_STATUS_OPEN);
+    }
+
+    public List<Ticket> getListOfTicketsByDepartment(User userLoggedIn) {
+        return ticketRepository.findByAssigneeDepartmentAndStatusOrderByCreatedAt(userLoggedIn.getDepartment(), Constants.TICKET_STATUS_OPEN);
+    }
+
+    public Department getDepartmentName(User userLoggedIn) {
+        return departmentRepository.findById(userLoggedIn.getDepartment().getId()).get();
     }
 
     public Boolean saveTicket(Ticket ticket, User userLoggedIn) {

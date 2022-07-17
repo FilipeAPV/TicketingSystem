@@ -48,7 +48,12 @@ public class AuthenticationProviderPswEmail implements AuthenticationProvider {
         User user = userRepository.findByEmail(email);
         if (user != null && user.getId() > 0 && passwordEncoder.matches(psw, user.getPassword())) {
             return new UsernamePasswordAuthenticationToken(
-                    user.getFirstName(), null, getGrantedAuthorities(user)
+                    user.getEmail(), null, getGrantedAuthorities(user)
+                    /*
+                    Changed from user.getFirstName to .getEmail() because of this line in the /dashboardController
+
+                     User userLoggedIn  = userRepository.findByEmail(authentication.getName());
+                     */
             );
         } else {
             throw new BadCredentialsException("Invalid Credentials!");

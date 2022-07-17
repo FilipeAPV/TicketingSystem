@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -65,6 +66,7 @@ https://templatemo.com/tm-544-comparto
                         <div>
                         <a th:href="@{/listTickets?list=created}" class="ml-auto tm-btn tm-btn-3 link-mouse-pointer-like-btn" >Created Tickets</a>
                         <a th:href="@{/listTickets?list=assigned}" class="ml-auto tm-btn tm-btn-3 link-mouse-pointer-like-btn" >Assigned Tickets</a>
+                        <a th:href="@{/listTickets?list=department}" class="ml-auto tm-btn tm-btn-3 link-mouse-pointer-like-btn" sec:authorize="hasRole('ROLE_SUPERUSER')">Department Tickets</a>
                         </div>
                     </div>
                 </div>

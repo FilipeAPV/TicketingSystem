@@ -3,7 +3,6 @@ package com.mycompany.ticketingsystem.controller;
 import com.mycompany.ticketingsystem.constants.Constants;
 import com.mycompany.ticketingsystem.dto.TicketDTO;
 import com.mycompany.ticketingsystem.dto.UserDTO;
-import com.mycompany.ticketingsystem.model.Ticket;
 import com.mycompany.ticketingsystem.model.User;
 import com.mycompany.ticketingsystem.repository.UserRepository;
 import com.mycompany.ticketingsystem.service.TicketService;
@@ -75,7 +74,7 @@ public class DashboardController {
             return Constants.DASHBOARD;
         }
 
-        Ticket ticketToEdit = (Ticket) httpSession.getAttribute("ticketToEdit");
+        com.mycompany.ticketingsystem.model.Ticket ticketToEdit = (com.mycompany.ticketingsystem.model.Ticket) httpSession.getAttribute("ticketToEdit");
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
 
@@ -95,7 +94,7 @@ public class DashboardController {
             + " - ");
         }
 
-        Ticket ticketToSave = modelMapper.map(ticketDTO, Ticket.class);
+        com.mycompany.ticketingsystem.model.Ticket ticketToSave = modelMapper.map(ticketDTO, com.mycompany.ticketingsystem.model.Ticket.class);
         User userLoggedIn = (User) httpSession.getAttribute("userLoggedIn");
         Boolean isSaved = ticketService.saveTicket(ticketToSave, userLoggedIn);
 

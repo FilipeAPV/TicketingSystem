@@ -21,6 +21,9 @@ public class Department extends BaseEntity{
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "department")
     private Set<User> userList = new HashSet<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "assigneeDepartment")
+    private Set<Ticket> ticketListPerDepartment = new HashSet<>();
+
     public int getId() {
         return id;
     }
@@ -61,5 +64,13 @@ public class Department extends BaseEntity{
 
     public void setSuperUserId(User superUserId) {
         this.superUserId = superUserId;
+    }
+
+    public Set<Ticket> getTicketListPerDepartment() {
+        return ticketListPerDepartment;
+    }
+
+    public void setTicketListPerDepartment(Ticket ticket) {
+        this.ticketListPerDepartment.add(ticket);
     }
 }

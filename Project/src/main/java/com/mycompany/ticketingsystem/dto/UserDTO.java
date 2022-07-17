@@ -33,6 +33,8 @@ public class UserDTO {
 
     private Department department;
 
+    private String role;
+
     public String getFirstName() {
         return firstName;
     }
@@ -111,5 +113,13 @@ public class UserDTO {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

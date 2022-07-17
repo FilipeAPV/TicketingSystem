@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -28,16 +29,29 @@
                 <th>Message</th>
                 <th>Priority</th>
                 <th>Created Date</th>
+                <th sec:authorize="hasRole('ROLE_SUPERUSER')">Assigned</th>
                 <th>Options</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="ticket: ${listTicketsCreated}">
+            <tr th:each="ticket, itemStat: ${listTicketsCreated}">
                 <td><p th:text="${ticket.subject}"></p></td>
                 <td><textarea th:text="${ticket.message}" rows="6" cols="50" name="message" class="form-control" placeholder="New Message..."
                               required="" disabled></textarea></td>
                 <td><p th:text="${ticket.priority}"></p></td>
                 <td><p th:text="${ticket.createdAt}"></p></td>
+                <td sec:authorize="hasRole('ROLE_SUPERUSER')">
+                    <form th:action="@{/editAssignee}" th:object="${listTicketsCreated}" >
+                        <select onchange="this.form.submit()">
+                            <option value="0" th:text="${ticket?.assignee?.firstName != null ? ticket?.assignee?.firstName + ' ' + ticket?.assignee?.lastName : 'Unassigned' }"></option>
+                            <option th:each="user : ${listOfUserDTOInsideDepartment}"
+                                    th:if="${user.email != ticket?.assignee?.email}"
+                                    th:value="${user}"
+                                    th:text="${user.firstName + ' ' + user.lastName}">
+                            </option>
+                        </select>
+                    </form>
+                </td>
                 <td class="updateAndDelete" th:with="link=${message == 'CREATED TICKETS' ? 'CREATED' : 'ASSIGNED'}">
                     <p><a th:href="@{/editTicket(ticketId=${ticket.id},relationship=${link})}">Update</a></p>
                     <p><a th:href="@{/closeTicket(ticketId=${ticket.id})}">Close</a></p>
