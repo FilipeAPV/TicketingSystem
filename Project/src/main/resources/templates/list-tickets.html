@@ -52,8 +52,8 @@
                         </select>
                     </form>
                 </td>
-                <td class="updateAndDelete" th:with="link=${message == 'CREATED TICKETS' ? 'CREATED' : 'ASSIGNED'}">
-                    <p><a th:href="@{/editTicket(ticketId=${ticket.id},relationship=${link})}">Update</a></p>
+                <td class="updateAndDelete">
+                    <p><a th:href="@{/editTicket(ticketId=${ticket.id},relationship=${relationship})}">Update</a></p>
                     <p><a th:href="@{/closeTicket(ticketId=${ticket.id})}">Close</a></p>
                 </td>
             </tr>

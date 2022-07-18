@@ -73,7 +73,7 @@ public class ListTicketsController {
             }
 
             model.addAttribute("listOfUserDTOInsideDepartment", listOfUserDTOInsideDepartment);
-
+            relationship = "department";
             message = "TICKETS FOR THE " + " " + departmentName + " " + " DEPARTMENT";
             listTicketsDTO = convertListDTO.convertToDTO(ticketService.getListOfTicketsByDepartment(userLoggedIn));
         }
@@ -81,6 +81,7 @@ public class ListTicketsController {
         model.addAttribute("listTicketsCreated",listTicketsDTO);
         model.addAttribute("message", message);
         model.addAttribute("assigneeDTO", assigneeDTO);
+        model.addAttribute("relationship", relationship);
 
         return "list-tickets";
     }

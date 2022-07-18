@@ -15,7 +15,9 @@
 
 <section>
     <div class="tm-bg-color-5">
-        <h2 class="tm-text-white tm-contact-title" th:text="${relationshipWithUser + ' TICKETS'}"></h2>
+        <h2 class="tm-text-white tm-contact-title" th:if="${relationshipWithUser} == 'created'">CREATED TICKETS</h2>
+        <h2 class="tm-text-white tm-contact-title" th:if="${relationshipWithUser} == 'assigned'">ASSIGNED TICKETS</h2>
+        <h2 class="tm-text-white tm-contact-title" th:if="${relationshipWithUser} == 'department'">DEPARTMENT TICKETS</h2>
     </div>
 
     <div class="tm-social-icon">
@@ -69,8 +71,8 @@
 </section>
 
 <footer class="tm-social-icon tm-bg-color-5">
-    <div th:with="link=${relationshipWithUser == 'CREATED' ? '/listTickets?list=created' : '/listTickets?list=assigned'}">
-        <a th:href="@{${link}}" class="tm-btn tm-btn-3 link-mouse-pointer-like-btn">RETURN</a>
+    <div>
+        <a th:href="@{/listTickets(list=${relationshipWithUser})}" class="tm-btn tm-btn-3 link-mouse-pointer-like-btn">RETURN</a>
     </div>
 </footer>
 </div> <!-- .container -->

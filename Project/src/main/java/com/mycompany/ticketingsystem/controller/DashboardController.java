@@ -104,7 +104,15 @@ public class DashboardController {
             return "redirect:/dashboard?saved=true";
         } else {
             httpSession.removeAttribute("ticketToEdit");
-            return (relationshipWithUser.equals("CREATED") ? "redirect:/listTickets?list=created" : "redirect:/listTickets?list=assigned");
+            String path = null;
+            if (relationshipWithUser.equals("created")) {
+                path = "created";
+            } else if (relationshipWithUser.equals("assigned")){
+                path = "assigned";
+            } else {
+                path = "department";
+            }
+            return ("redirect:/listTickets?list=" + path);
         }
     }
 
