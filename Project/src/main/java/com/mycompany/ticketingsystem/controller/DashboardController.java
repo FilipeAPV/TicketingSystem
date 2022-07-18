@@ -56,9 +56,10 @@ public class DashboardController {
         }
 
         model.addAttribute("ticket", new TicketDTO());
-        model.addAttribute("userLoggedIn", userLoggedInDTO);
         model.addAttribute("priorityList", Constants.ticketPriority);
         model.addAttribute("message", message);
+        model.addAttribute("userLoggedIn", userLoggedInDTO);
+
 
         return Constants.DASHBOARD;
     }
