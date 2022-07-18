@@ -1,12 +1,13 @@
 package com.mycompany.ticketingsystem.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "departments")
-public class Department extends BaseEntity{
+public class Department extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "department_id")

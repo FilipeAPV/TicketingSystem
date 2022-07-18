@@ -40,13 +40,13 @@
                               required="" disabled></textarea></td>
                 <td><p th:text="${ticket.priority}"></p></td>
                 <td><p th:text="${ticket.createdAt}"></p></td>
-                <td sec:authorize="hasRole('ROLE_SUPERUSER')">
-                    <form th:action="@{/editAssignee}" th:object="${listTicketsCreated}" >
-                        <select onchange="this.form.submit()">
+                <td sec:authorize="hasRole('ROLE_SUPERUSER')" >
+                    <form th:action="@{/editAssignee(ticketId=${ticket.id})}" th:object="${assigneeDTO}" method="POST">
+                        <select  th:field="*{assigneeId}" onchange="this.form.submit()">
                             <option value="0" th:text="${ticket?.assignee?.firstName != null ? ticket?.assignee?.firstName + ' ' + ticket?.assignee?.lastName : 'Unassigned' }"></option>
                             <option th:each="user : ${listOfUserDTOInsideDepartment}"
                                     th:if="${user.email != ticket?.assignee?.email}"
-                                    th:value="${user}"
+                                    th:value="${user.id}"
                                     th:text="${user.firstName + ' ' + user.lastName}">
                             </option>
                         </select>

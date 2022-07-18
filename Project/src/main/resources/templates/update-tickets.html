@@ -19,7 +19,7 @@
     </div>
 
     <div class="tm-social-icon">
-        <form th:object="${ticket}" id="contact-form" th:action="@{/saveTicket}" method="POST" class="tm-bg-color-6 tm-contact-form">
+        <form th:object="${ticket}" id="contact-form" th:action="@{/saveTicket(relationshipWithUser=${relationshipWithUser})}" method="POST" class="tm-bg-color-6 tm-contact-form">
             <table class="styled-table">
                 <tr>
                     <td>SUBJECT</td>

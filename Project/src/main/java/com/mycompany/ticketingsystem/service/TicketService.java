@@ -7,6 +7,7 @@ import com.mycompany.ticketingsystem.model.Ticket;
 import com.mycompany.ticketingsystem.model.User;
 import com.mycompany.ticketingsystem.repository.DepartmentRepository;
 import com.mycompany.ticketingsystem.repository.TicketRepository;
+import com.mycompany.ticketingsystem.repository.UserRepository;
 import org.apache.catalina.session.StandardSession;
 import org.apache.catalina.session.StandardSessionFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,15 @@ import java.util.List;
 public class TicketService {
     private TicketRepository ticketRepository;
     private DepartmentRepository departmentRepository;
+    private UserRepository userRepository;
 
     @Autowired
     public TicketService(TicketRepository ticketRepository,
-                         DepartmentRepository departmentRepository) {
+                         DepartmentRepository departmentRepository,
+                         UserRepository userRepository) {
         this.ticketRepository = ticketRepository;
         this.departmentRepository = departmentRepository;
+        this.userRepository = userRepository;
     }
 
     public Ticket getTicketById(int id) {
@@ -61,5 +65,15 @@ public class TicketService {
         }
 
         return isSaved;
+    }
+
+    public void editAssignee(int assigneeId, Integer ticketId) {
+        Ticket ticketToChangeAssignee = ticketRepository.findById(ticketId).get();
+        User userToAddAsAssignee = userRepository.findById(assigneeId).get();
+
+        ticketToChangeAssignee.setAssignee(userToAddAsAssignee);
+        ticketToChangeAssignee.setAssigneeDepartment(userToAddAsAssignee.getDepartment());
+
+        ticketRepository.save(ticketToChangeAssignee);
     }
 }

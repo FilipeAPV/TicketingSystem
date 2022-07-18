@@ -3,6 +3,7 @@ package com.mycompany.ticketingsystem.controller;
 import com.mycompany.ticketingsystem.constants.Constants;
 import com.mycompany.ticketingsystem.dto.TicketDTO;
 import com.mycompany.ticketingsystem.dto.UserDTO;
+import com.mycompany.ticketingsystem.model.Ticket;
 import com.mycompany.ticketingsystem.model.User;
 import com.mycompany.ticketingsystem.repository.UserRepository;
 import com.mycompany.ticketingsystem.service.TicketService;
@@ -64,7 +65,8 @@ public class DashboardController {
 
     @PostMapping("/saveTicket")
     public String saveTicket(@Valid @ModelAttribute("ticket") TicketDTO ticketDTO,
-                             Errors errors, Model model, HttpSession httpSession) {
+                             Errors errors, Model model, HttpSession httpSession,
+                             @RequestParam(value = "relationshipWithUser", required = false) String relationshipWithUser) {
 
 
 
@@ -74,7 +76,7 @@ public class DashboardController {
             return Constants.DASHBOARD;
         }
 
-        com.mycompany.ticketingsystem.model.Ticket ticketToEdit = (com.mycompany.ticketingsystem.model.Ticket) httpSession.getAttribute("ticketToEdit");
+        Ticket ticketToEdit = (Ticket) httpSession.getAttribute("ticketToEdit");
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
 
@@ -102,10 +104,8 @@ public class DashboardController {
             return "redirect:/dashboard?saved=true";
         } else {
             httpSession.removeAttribute("ticketToEdit");
-            return "redirect:/listTickets?list=created";
+            return (relationshipWithUser.equals("CREATED") ? "redirect:/listTickets?list=created" : "redirect:/listTickets?list=assigned");
         }
-
-        //return Constants.DASHBOARD;
     }
 
 }

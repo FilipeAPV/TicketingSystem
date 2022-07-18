@@ -1,10 +1,11 @@
 package com.mycompany.ticketingsystem.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "tickets")
-public class Ticket extends BaseEntity{
+public class Ticket extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ticket_id")
@@ -93,5 +94,13 @@ public class Ticket extends BaseEntity{
                 ", creator=" + creator.getFirstName() +
                 ", assignee=" + assignee +
                 '}';
+    }
+
+    public Department getAssigneeDepartment() {
+        return assigneeDepartment;
+    }
+
+    public void setAssigneeDepartment(Department assigneeDepartment) {
+        this.assigneeDepartment = assigneeDepartment;
     }
 }
