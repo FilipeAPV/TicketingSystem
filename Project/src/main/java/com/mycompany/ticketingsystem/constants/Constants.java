@@ -6,6 +6,7 @@ public interface Constants {
     public static final String REGISTRATIONFORM = "register";
     public static final String DEPARTMENT_LIST = "departmentList";
     public static final String ROLE_USER = "ROLE_USER";
+    public static final String ROLE_SUPERUSER = "ROLE_SUPERUSER";
 
     public static final String TICKET_STATUS_OPEN = "OPEN";
     public static final String TICKET_STATUS_DELIVERED = "DELIVERED";

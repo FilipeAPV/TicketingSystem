@@ -21,7 +21,8 @@
     <div class="tm-bg-color-5">
         <h2 class="tm-text-white tm-contact-title" th:text="${message}"></h2>
     </div>
-
+    <div class="tm-social-icon">
+    </div>
 
     <div class="tm-social-icon">
 
@@ -32,7 +33,7 @@
                 <th>Message</th>
                 <th>Priority</th>
                 <th>Created Date</th>
-                <th sec:authorize="hasRole('ROLE_SUPERUSER')">Assigned</th>
+                <th sec:authorize="hasAnyRole('ROLE_SUPERUSER', 'ROLE_ADMINISTRATOR')">Assigned</th>
                 <th>Options</th>
             </tr>
             </thead>
@@ -43,14 +44,14 @@
                               required="" disabled></textarea></td>
                 <td><p th:text="${ticket.priority}"></p></td>
                 <td><p th:text="${ticket.createdAt}"></p></td>
-                <td sec:authorize="hasRole('ROLE_SUPERUSER')" >
-                    <form th:action="@{/editAssignee(ticketId=${ticket.id})}" th:object="${assigneeDTO}" method="POST">
+                <td sec:authorize="hasAnyRole('ROLE_SUPERUSER', 'ROLE_ADMINISTRATOR')" >
+                    <form th:action="@{/editAssignee(ticketId=${ticket.id}, relationship=${relationship})}" th:object="${assigneeDTO}" method="POST">
                         <select  th:field="*{assigneeId}" onchange="this.form.submit()">
                             <option value="0" th:text="${ticket?.assignee?.firstName != null ? ticket?.assignee?.firstName + ' ' + ticket?.assignee?.lastName : 'Unassigned' }"></option>
                             <option th:each="user : ${listOfUserDTOInsideDepartment}"
-                                    th:if="${user.email != ticket?.assignee?.email}"
+                                    th:if="${user.email != ticket?.assignee?.email and user.department.name == ticket.creator.department.name}"
                                     th:value="${user.id}"
-                                    th:text="${user.firstName + ' ' + user.lastName}">
+                                    th:text="${relationship != 'admin' ? user.firstName + ' ' + user.lastName : user.firstName + ' ' + user.lastName + ' - ' + user.department.name}"> // add department
                             </option>
                         </select>
                     </form>
@@ -58,7 +59,7 @@
                 </td>
                 <td class="updateAndDelete">
                     <p><a th:href="@{/editTicket(ticketId=${ticket.id},relationship=${relationship})}">Update</a></p>
-                    <p><a th:href="@{/closeTicket(ticketId=${ticket.id})}">Close</a></p>
+                    <p><a th:href="@{/closeTicket(ticketId=${ticket.id},relationship=${relationship})}">Close</a></p>
                 </td>
             </tr>
             </tbody>

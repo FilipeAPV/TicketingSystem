@@ -9,8 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class ConvertListDTO {
@@ -22,7 +23,7 @@ public class ConvertListDTO {
         this.modelMapper = modelMapper;
     }
 
-    public List<TicketDTO> convertToDTO(List<Ticket> source) {
+    public List<TicketDTO> convertTicketToDTO(List<Ticket> source) {
         List<TicketDTO> convertedList = new ArrayList<>();
         for (Ticket ticket : source) {
             convertedList.add(modelMapper.map(ticket, TicketDTO.class));
@@ -37,4 +38,13 @@ public class ConvertListDTO {
         }
         return convertedList;
     }
+
+    public Set<UserDTO> convertUserToDTO(Set<User> userList) {
+        Set<UserDTO> userDTOList = new HashSet<>();
+        for (User user: userList) {
+            userDTOList.add(modelMapper.map(user, UserDTO.class));
+        }
+        return userDTOList;
+    }
+
 }

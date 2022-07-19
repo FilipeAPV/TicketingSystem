@@ -7,6 +7,7 @@ import com.mycompany.ticketingsystem.model.Ticket;
 import com.mycompany.ticketingsystem.model.User;
 import com.mycompany.ticketingsystem.repository.UserRepository;
 import com.mycompany.ticketingsystem.service.TicketService;
+import com.mycompany.ticketingsystem.utility.StatisticsDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -26,17 +27,19 @@ import java.util.Date;
 @Controller
 public class DashboardController {
 
-    private UserRepository userRepository;
-    private ModelMapper modelMapper;
-    private TicketService ticketService;
+    private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
+    private final TicketService ticketService;
+    private final StatisticsDTO statisticsDTO;
     private UserDTO userLoggedInDTO;
 
     @Autowired
     public DashboardController(UserRepository userRepository, ModelMapper modelMapper,
-                               TicketService ticketService) {
+                               TicketService ticketService, StatisticsDTO statisticsDTO) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.ticketService = ticketService;
+        this.statisticsDTO = statisticsDTO;
     }
 
     @GetMapping("/dashboard")
@@ -60,6 +63,15 @@ public class DashboardController {
         model.addAttribute("message", message);
         model.addAttribute("userLoggedIn", userLoggedInDTO);
 
+
+        if (authentication.getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ROLE_ADMINISTRATOR"))) {
+            statisticsDTO.setOpenTickets(ticketService.numberOfOpenTickets());
+            statisticsDTO.setAssignedTickets(ticketService.numberOfAssignedTickets());
+            statisticsDTO.setAllTickets(ticketService.numberOfAllTickets().size());
+            statisticsDTO.setTotalUsers((userRepository.findAll()).size());
+
+            model.addAttribute("statistics", statisticsDTO);
+        }
 
         return Constants.DASHBOARD;
     }
@@ -110,8 +122,10 @@ public class DashboardController {
                 path = "created";
             } else if (relationshipWithUser.equals("assigned")){
                 path = "assigned";
-            } else {
+            } else if (relationshipWithUser.equals("department")){
                 path = "department";
+            } else {
+                path = "admin";
             }
             return ("redirect:/listTickets?list=" + path);
         }

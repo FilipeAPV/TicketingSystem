@@ -1,6 +1,7 @@
 package com.mycompany.ticketingsystem.service;
 
 import com.mycompany.ticketingsystem.constants.Constants;
+import com.mycompany.ticketingsystem.controller.LoginController;
 import com.mycompany.ticketingsystem.dto.UserDTO;
 import com.mycompany.ticketingsystem.model.Department;
 import com.mycompany.ticketingsystem.model.Ticket;
@@ -19,17 +20,20 @@ import java.util.List;
 
 @Service
 public class TicketService {
-    private TicketRepository ticketRepository;
-    private DepartmentRepository departmentRepository;
-    private UserRepository userRepository;
+    private final TicketRepository ticketRepository;
+    private final DepartmentRepository departmentRepository;
+    private final UserRepository userRepository;
+    private final LoginController loginController;
 
     @Autowired
     public TicketService(TicketRepository ticketRepository,
                          DepartmentRepository departmentRepository,
-                         UserRepository userRepository) {
+                         UserRepository userRepository,
+                         LoginController loginController) {
         this.ticketRepository = ticketRepository;
         this.departmentRepository = departmentRepository;
         this.userRepository = userRepository;
+        this.loginController = loginController;
     }
 
     public Ticket getTicketById(int id) {
@@ -75,5 +79,19 @@ public class TicketService {
         ticketToChangeAssignee.setAssigneeDepartment(userToAddAsAssignee.getDepartment());
 
         ticketRepository.save(ticketToChangeAssignee);
+    }
+
+    public int numberOfOpenTickets() {
+        List<Ticket> ticketList = ticketRepository.findByStatus(Constants.TICKET_STATUS_OPEN);
+        return ticketList.size();
+    }
+
+    public List<Ticket> numberOfAllTickets() {
+        return ticketRepository.findAll();
+    }
+
+    public int numberOfAssignedTickets() {
+        List<Ticket> ticketList = ticketRepository.findByAssigneeIsNotNullAndStatus(Constants.TICKET_STATUS_OPEN);
+        return ticketList.size();
     }
 }

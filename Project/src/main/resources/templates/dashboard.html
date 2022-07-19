@@ -64,8 +64,7 @@ https://templatemo.com/tm-544-comparto
                     </form>
                 </div>
                 <div class="contact-form-outer" sec:authorize="hasRole('ROLE_ADMINISTRATOR')">
-                    <body class="bg-default">
-                    <div class="main-content">
+                    <div class="main-content bg-default">
                         <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
                             <div class="container-fluid">
                                 <h2 class="mb-5 text-">Stats Card</h2>
@@ -77,12 +76,7 @@ https://templatemo.com/tm-544-comparto
                                                     <div class="row">
                                                         <div class="col">
                                                             <h5 class="card-title text-uppercase text-muted mb-0">Open Tickets</h5>
-                                                            <span class="h2 font-weight-bold mb-0">350,897</span>
-                                                        </div>
-                                                        <div class="col-auto">
-                                                            <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                                                                <i class="fas fa-chart-bar"></i>
-                                                            </div>
+                                                            <span class="h2 font-weight-bold mb-0" th:text="${statistics.openTickets}"></span>
                                                         </div>
                                                     </div>
 
@@ -95,12 +89,19 @@ https://templatemo.com/tm-544-comparto
                                                     <div class="row">
                                                         <div class="col">
                                                             <h5 class="card-title text-uppercase text-muted mb-0">Assigned Tickets</h5>
-                                                            <span class="h2 font-weight-bold mb-0">2,356</span>
+                                                            <span class="h2 font-weight-bold mb-0" th:text="${statistics.assignedTickets}"></span>
                                                         </div>
-                                                        <div class="col-auto">
-                                                            <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
-                                                                <i class="fas fa-chart-pie"></i>
-                                                            </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-6">
+                                            <div class="card card-stats mb-4 mb-xl-0">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <h5 class="card-title text-uppercase text-muted mb-0">Total Tickets</h5>
+                                                            <span class="h2 font-weight-bold mb-0" th:text="${statistics.allTickets}"></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -112,29 +113,7 @@ https://templatemo.com/tm-544-comparto
                                                     <div class="row">
                                                         <div class="col">
                                                             <h5 class="card-title text-uppercase text-muted mb-0">Total Users</h5>
-                                                            <span class="h2 font-weight-bold mb-0">924</span>
-                                                        </div>
-                                                        <div class="col-auto">
-                                                            <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                                                                <i class="fas fa-users"></i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-3 col-lg-6">
-                                            <div class="card card-stats mb-4 mb-xl-0">
-                                                <div class="card-body">
-                                                    <div class="row">
-                                                        <div class="col">
-                                                            <h5 class="card-title text-uppercase text-muted mb-0">Avg. Ticket P/ User</h5>
-                                                            <span class="h2 font-weight-bold mb-0">49,65%</span>
-                                                        </div>
-                                                        <div class="col-auto">
-                                                            <div class="icon icon-shape bg-info text-white rounded-circle shadow">
-                                                                <i class="fas fa-percent"></i>
-                                                            </div>
+                                                            <span class="h2 font-weight-bold mb-0" th:text="${statistics.totalUsers}"></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -146,7 +125,6 @@ https://templatemo.com/tm-544-comparto
                         </div>
                         <!-- Page content -->
                     </div>
-                    </body>
                 </div>
                 <div class="contact-info-outer">
                     <div class="tm-bg-color-6 contact-info">
@@ -154,7 +132,7 @@ https://templatemo.com/tm-544-comparto
                         <a th:href="@{/listTickets?list=created}" class="ml-auto tm-btn tm-btn-3 link-mouse-pointer-like-btn" sec:authorize="hasAnyRole('ROLE_USER','ROLE_SUPERUSER')">Created Tickets</a>
                         <a th:href="@{/listTickets?list=assigned}" class="ml-auto tm-btn tm-btn-3 link-mouse-pointer-like-btn" sec:authorize="hasAnyRole('ROLE_USER','ROLE_SUPERUSER')">Assigned Tickets</a>
                         <a th:href="@{/listTickets?list=department}" class="ml-auto tm-btn tm-btn-3 link-mouse-pointer-like-btn" sec:authorize="hasRole('ROLE_SUPERUSER')">Department Tickets</a>
-                        <a th:href="@{/listTickets?list=department}" class="ml-auto tm-btn tm-btn-3 link-mouse-pointer-like-btn" sec:authorize="hasRole('ROLE_ADMINISTRATOR')">Ticket Detail</a>
+                        <a th:href="@{/listTickets?list=admin}" class="ml-auto tm-btn tm-btn-3 link-mouse-pointer-like-btn" sec:authorize="hasRole('ROLE_ADMINISTRATOR')">Ticket Detail</a>
                         <a th:href="@{/listTickets?list=department}" class="ml-auto tm-btn tm-btn-3 link-mouse-pointer-like-btn" sec:authorize="hasRole('ROLE_ADMINISTRATOR')">Assign SuperUser</a>
                         </div>
                     </div>

@@ -13,4 +13,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
     List<Ticket> findByCreatorAndStatusOrderByCreatedAt(User user, String status);
     List<Ticket> findByAssigneeAndStatusOrderByCreatedAt(User user, String status);
     List<Ticket> findByAssigneeDepartmentAndStatusOrderByCreatedAt(Department department, String status);
+    List<Ticket> findByStatus(String status);
+    List<Ticket> findByAssigneeIsNotNullAndStatus(String status);
 }
