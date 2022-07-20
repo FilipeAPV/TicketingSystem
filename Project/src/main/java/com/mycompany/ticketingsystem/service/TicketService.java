@@ -9,6 +9,7 @@ import com.mycompany.ticketingsystem.model.User;
 import com.mycompany.ticketingsystem.repository.DepartmentRepository;
 import com.mycompany.ticketingsystem.repository.TicketRepository;
 import com.mycompany.ticketingsystem.repository.UserRepository;
+import com.mycompany.ticketingsystem.utility.FilterDTO;
 import org.apache.catalina.session.StandardSession;
 import org.apache.catalina.session.StandardSessionFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +25,19 @@ public class TicketService {
     private final DepartmentRepository departmentRepository;
     private final UserRepository userRepository;
     private final LoginController loginController;
+    private final FilterDTO filterDTO;
 
     @Autowired
     public TicketService(TicketRepository ticketRepository,
                          DepartmentRepository departmentRepository,
                          UserRepository userRepository,
-                         LoginController loginController) {
+                         LoginController loginController,
+                         FilterDTO filterDTO) {
         this.ticketRepository = ticketRepository;
         this.departmentRepository = departmentRepository;
         this.userRepository = userRepository;
         this.loginController = loginController;
+        this.filterDTO = filterDTO;
     }
 
     public Ticket getTicketById(int id) {
@@ -87,7 +91,7 @@ public class TicketService {
     }
 
     public List<Ticket> numberOfAllTickets() {
-        return ticketRepository.findAll();
+        return ticketRepository.findAllByOrderByCreatedAt();
     }
 
     public int numberOfAssignedTickets() {

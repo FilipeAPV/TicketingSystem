@@ -21,7 +21,20 @@
     <div class="tm-bg-color-5">
         <h2 class="tm-text-white tm-contact-title" th:text="${message}"></h2>
     </div>
-    <div class="tm-social-icon">
+    <div class="tm-social-icon" sec:authorize="hasRole('ROLE_ADMINISTRATOR')">
+        <form th:object="${filter}" th:action="@{/filterlist}" method="post">
+            <div class="form-check form-check-inline">
+                <input th:field="*{open}" class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+                <label class="form-check-label" for="inlineCheckbox1">OPEN</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input th:field="*{high}" class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                <label class="form-check-label" for="inlineCheckbox2">HIGH</label>
+            </div>
+            <div class="col-auto form-check-inline">
+                <button type="submit" class="btn btn-outline-success btn-sm">UPDATE</button>
+            </div>
+        </form>
     </div>
 
     <div class="tm-social-icon">
@@ -29,6 +42,9 @@
         <table class="styled-table">
             <thead>
             <tr class="table--header">
+                <th sec:authorize="hasRole('ROLE_ADMINISTRATOR')">Status</th>
+                <th sec:authorize="hasRole('ROLE_ADMINISTRATOR')">Department</th>
+                <th sec:authorize="hasRole('ROLE_ADMINISTRATOR')">Creator</th>
                 <th>Subject</th>
                 <th>Message</th>
                 <th>Priority</th>
@@ -39,6 +55,9 @@
             </thead>
             <tbody>
             <tr th:each="ticket, itemStat: ${listTicketsCreated}">
+                <td sec:authorize="hasRole('ROLE_ADMINISTRATOR')" th:text="${ticket.status}"></td>
+                <td sec:authorize="hasRole('ROLE_ADMINISTRATOR')" th:text="${ticket.creator.department.name}"></td>
+                <td sec:authorize="hasRole('ROLE_ADMINISTRATOR')" th:text="${ticket.creator.firstName + ' ' + ticket.creator.lastName}"></td>
                 <td><p th:text="${ticket.subject}"></p></td>
                 <td><textarea th:text="${ticket.message}" rows="6" cols="50" name="message" class="form-control" placeholder="New Message..."
                               required="" disabled></textarea></td>
@@ -51,7 +70,7 @@
                             <option th:each="user : ${listOfUserDTOInsideDepartment}"
                                     th:if="${user.email != ticket?.assignee?.email and user.department.name == ticket.creator.department.name}"
                                     th:value="${user.id}"
-                                    th:text="${relationship != 'admin' ? user.firstName + ' ' + user.lastName : user.firstName + ' ' + user.lastName + ' - ' + user.department.name}"> // add department
+                                    th:text="${user.firstName + ' ' + user.lastName}">
                             </option>
                         </select>
                     </form>

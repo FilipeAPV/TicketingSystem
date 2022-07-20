@@ -12,14 +12,12 @@ import com.mycompany.ticketingsystem.repository.TicketRepository;
 import com.mycompany.ticketingsystem.repository.UserRepository;
 import com.mycompany.ticketingsystem.service.TicketService;
 import com.mycompany.ticketingsystem.utility.ConvertListDTO;
+import com.mycompany.ticketingsystem.utility.FilterDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -37,6 +35,7 @@ public class ListTicketsController {
     private final HttpSession httpSession;
     private final ModelMapper modelMapper;
     private final ConvertListDTO convertListDTO;
+    private final FilterDTO filterDTO;
 
     @Autowired
     public ListTicketsController(TicketService ticketService,
@@ -45,7 +44,8 @@ public class ListTicketsController {
                                  DepartmentRepository departmentRepository,
                                  HttpSession httpSession,
                                  ModelMapper modelMapper,
-                                 ConvertListDTO convertListDTO) {
+                                 ConvertListDTO convertListDTO,
+                                 FilterDTO filterDTO) {
         this.ticketService = ticketService;
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
@@ -53,6 +53,7 @@ public class ListTicketsController {
         this.httpSession = httpSession;
         this.modelMapper = modelMapper;
         this.convertListDTO = convertListDTO;
+        this.filterDTO = filterDTO;
     }
 
     @GetMapping("/listTickets")
@@ -87,8 +88,10 @@ public class ListTicketsController {
             message = "ADMIN CONSOLE";
             relationship = "admin";
             listTicketsDTO = convertListDTO.convertTicketToDTO(ticketService.numberOfAllTickets());
+            // listTicketsDTO = convertListDTO.convertTicketToDTO(ticketRepository.findByFilter("*", "*"));
             // List of SuperUsers below
             listOfUserDTOInsideDepartment = convertListDTO.convertUserToDTO(userRepository.findByRole(Constants.ROLE_SUPERUSER));
+            model.addAttribute("filter", filterDTO);
 
         } else {
             listTicketsDTO = List.of(new TicketDTO());
@@ -138,6 +141,18 @@ public class ListTicketsController {
         return ("redirect:/listTickets?list=" + path);
     }
 
+    @PostMapping("/filterlist")
+    public String filterList(@ModelAttribute("filter") FilterDTO filterDTOfromHtml) {
+        System.out.println("==================================" + filterDTOfromHtml.isOpen());
+        System.out.println("==================================" + filterDTOfromHtml.isHigh());
+
+        /*
+
+         */
+
+
+        return "redirect:/listTickets?list=admin";
+    }
 
     @GetMapping("/closeTicket")
     public String deleteTicket(@RequestParam("ticketId") int id,
