@@ -88,6 +88,14 @@
             </tbody>
         </table>
     </div>
+    <div class="tm-social-icon">
+        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+                <a th:if="${currentPage == i}" href="#" class="badge rounded-pill text-bg-secondary">[[${i}]]</a>
+                <a th:if="${currentPage != i}" th:href="@{'/listTickets/' + ${i} + '?list=admin'}" class="badge rounded-pill text-bg-success">[[${i}]]</a>
+        </span>
+
+
+    </div>
 </section>
 
 

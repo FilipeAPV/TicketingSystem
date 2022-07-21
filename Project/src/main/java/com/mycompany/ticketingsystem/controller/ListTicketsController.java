@@ -15,6 +15,7 @@ import com.mycompany.ticketingsystem.utility.ConvertListDTO;
 import com.mycompany.ticketingsystem.utility.FilterDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -59,8 +60,9 @@ public class ListTicketsController {
         this.convertListDTO = convertListDTO;
     }
 
-    @GetMapping("/listTickets")
+    @GetMapping("/listTickets/{pageNum}")
     public String listTickets(@RequestParam(value = "list") String listType,
+                              @PathVariable(name = "pageNum") int pageNum,
                               Model model, HttpSession httpSession) {
 
         String message = null;
@@ -90,9 +92,17 @@ public class ListTicketsController {
         } else if (listType.equals("admin")) {
             message = "ADMIN CONSOLE";
             relationship = "admin";
-            listTicketsDTO = convertListDTO.convertTicketToDTO(ticketService.findAllWithSpecification(status, priority));
+
+            Page<Ticket> tickets = ticketService.findAllWithSpecification(pageNum, status, priority);
+            listTicketsDTO = convertListDTO.convertTicketToDTO(tickets.getContent());
+            model.addAttribute("currentPage", pageNum);
+            model.addAttribute("totalPages", tickets.getTotalPages());
+            model.addAttribute("totalTickets", tickets.getTotalElements());
+
+
             // List of SuperUsers below
             listOfUserDTOInsideDepartment = convertListDTO.convertUserToDTO(userRepository.findByRole(Constants.ROLE_SUPERUSER));
+
             model.addAttribute("filter", (filterDTOfromHtml != null) ? filterDTOfromHtml : new FilterDTO());
         } else {
             listTicketsDTO = List.of(new TicketDTO());

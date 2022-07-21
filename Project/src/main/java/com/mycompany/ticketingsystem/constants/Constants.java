@@ -21,4 +21,6 @@ public interface Constants {
     List<String> ticketPriority = List.of(TICKET_PRIORITY_STANDARD, TICKET_PRIORITY_URGENT);
 
     public static final String DASHBOARD = "dashboard";
+
+    public static final int PAGE_SIZE = 5;
 }

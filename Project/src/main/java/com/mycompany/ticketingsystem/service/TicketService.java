@@ -14,10 +14,14 @@ import com.mycompany.ticketingsystem.utility.FilterDTO;
 import org.apache.catalina.session.StandardSession;
 import org.apache.catalina.session.StandardSessionFacade;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -98,11 +102,18 @@ public class TicketService {
         return ticketList.size();
     }
 
-    public List<Ticket> findAllWithSpecification(String status, String priority) {
+    public Page<Ticket> findAllWithSpecification(int pageNum, String status, String priority) {
+        int pageSize = Constants.PAGE_SIZE;
+
         Specification<Ticket> specification = Specification
                 .where(status == null ? null : DbFilterSpecification.statusContains(status))
                 .and(priority == null ? null : DbFilterSpecification.priorityContains(priority));
 
-    return ticketRepository.findAll(specification);
+        // Spring Data JPA starts counting at 0 which means that we need to remove 1 from the number we receive from UI.
+        Pageable pageable = PageRequest.of(pageNum - 1, pageSize);
+
+        Page<Ticket> tickets = ticketRepository.findAll(specification, pageable);
+
+    return tickets;
     }
 }
