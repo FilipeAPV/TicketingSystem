@@ -35,7 +35,12 @@ public class ListTicketsController {
     private final HttpSession httpSession;
     private final ModelMapper modelMapper;
     private final ConvertListDTO convertListDTO;
-    private final FilterDTO filterDTO;
+    private String status = null;
+    private String priority = null;
+
+    private FilterDTO filterDTOfromHtml;
+
+
 
     @Autowired
     public ListTicketsController(TicketService ticketService,
@@ -44,8 +49,7 @@ public class ListTicketsController {
                                  DepartmentRepository departmentRepository,
                                  HttpSession httpSession,
                                  ModelMapper modelMapper,
-                                 ConvertListDTO convertListDTO,
-                                 FilterDTO filterDTO) {
+                                 ConvertListDTO convertListDTO) {
         this.ticketService = ticketService;
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
@@ -53,7 +57,6 @@ public class ListTicketsController {
         this.httpSession = httpSession;
         this.modelMapper = modelMapper;
         this.convertListDTO = convertListDTO;
-        this.filterDTO = filterDTO;
     }
 
     @GetMapping("/listTickets")
@@ -87,12 +90,10 @@ public class ListTicketsController {
         } else if (listType.equals("admin")) {
             message = "ADMIN CONSOLE";
             relationship = "admin";
-            listTicketsDTO = convertListDTO.convertTicketToDTO(ticketService.numberOfAllTickets());
-            // listTicketsDTO = convertListDTO.convertTicketToDTO(ticketRepository.findByFilter("*", "*"));
+            listTicketsDTO = convertListDTO.convertTicketToDTO(ticketService.findAllWithSpecification(status, priority));
             // List of SuperUsers below
             listOfUserDTOInsideDepartment = convertListDTO.convertUserToDTO(userRepository.findByRole(Constants.ROLE_SUPERUSER));
-            model.addAttribute("filter", filterDTO);
-
+            model.addAttribute("filter", (filterDTOfromHtml != null) ? filterDTOfromHtml : new FilterDTO());
         } else {
             listTicketsDTO = List.of(new TicketDTO());
         }
@@ -143,13 +144,10 @@ public class ListTicketsController {
 
     @PostMapping("/filterlist")
     public String filterList(@ModelAttribute("filter") FilterDTO filterDTOfromHtml) {
-        System.out.println("==================================" + filterDTOfromHtml.isOpen());
-        System.out.println("==================================" + filterDTOfromHtml.isHigh());
 
-        /*
-
-         */
-
+        this.filterDTOfromHtml = filterDTOfromHtml;
+        status = (filterDTOfromHtml.isOpen()) ? Constants.TICKET_STATUS_OPEN : null;
+        priority = (filterDTOfromHtml.isHigh()) ? Constants.TICKET_PRIORITY_URGENT : null;
 
         return "redirect:/listTickets?list=admin";
     }

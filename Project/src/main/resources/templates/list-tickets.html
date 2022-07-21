@@ -29,7 +29,11 @@
             </div>
             <div class="form-check form-check-inline">
                 <input th:field="*{high}" class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-                <label class="form-check-label" for="inlineCheckbox2">HIGH</label>
+                <label class="form-check-label" for="inlineCheckbox2">URGENT</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input th:field="*{assigned}" class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
+                <label class="form-check-label" for="inlineCheckbox3">UNASSIGNED</label>
             </div>
             <div class="col-auto form-check-inline">
                 <button type="submit" class="btn btn-outline-success btn-sm">UPDATE</button>

@@ -9,10 +9,12 @@ import com.mycompany.ticketingsystem.model.User;
 import com.mycompany.ticketingsystem.repository.DepartmentRepository;
 import com.mycompany.ticketingsystem.repository.TicketRepository;
 import com.mycompany.ticketingsystem.repository.UserRepository;
+import com.mycompany.ticketingsystem.utility.DbFilterSpecification;
 import com.mycompany.ticketingsystem.utility.FilterDTO;
 import org.apache.catalina.session.StandardSession;
 import org.apache.catalina.session.StandardSessionFacade;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,19 +27,16 @@ public class TicketService {
     private final DepartmentRepository departmentRepository;
     private final UserRepository userRepository;
     private final LoginController loginController;
-    private final FilterDTO filterDTO;
 
     @Autowired
     public TicketService(TicketRepository ticketRepository,
                          DepartmentRepository departmentRepository,
                          UserRepository userRepository,
-                         LoginController loginController,
-                         FilterDTO filterDTO) {
+                         LoginController loginController) {
         this.ticketRepository = ticketRepository;
         this.departmentRepository = departmentRepository;
         this.userRepository = userRepository;
         this.loginController = loginController;
-        this.filterDTO = filterDTO;
     }
 
     public Ticket getTicketById(int id) {
@@ -97,5 +96,13 @@ public class TicketService {
     public int numberOfAssignedTickets() {
         List<Ticket> ticketList = ticketRepository.findByAssigneeIsNotNullAndStatus(Constants.TICKET_STATUS_OPEN);
         return ticketList.size();
+    }
+
+    public List<Ticket> findAllWithSpecification(String status, String priority) {
+        Specification<Ticket> specification = Specification
+                .where(status == null ? null : DbFilterSpecification.statusContains(status))
+                .and(priority == null ? null : DbFilterSpecification.priorityContains(priority));
+
+    return ticketRepository.findAll(specification);
     }
 }
