@@ -22,7 +22,7 @@
     </div>
 
     <div class="tm-social-icon">
-        <form th:object="${ticket}" id="contact-form" th:action="@{/saveTicket(relationshipWithUser=${relationshipWithUser})}" method="POST" class="tm-bg-color-6 tm-contact-form">
+        <form th:object="${ticket}" id="contact-form" th:action="@{/saveTicket(relationshipWithUser=${relationshipWithUser}, currentPage=${currentPage})}" method="POST" class="tm-bg-color-6 tm-contact-form">
             <table class="styled-table">
                 <tr>
                     <td>SUBJECT</td>
@@ -73,7 +73,8 @@
 
 <footer class="tm-social-icon tm-bg-color-5">
     <div>
-        <a th:href="@{/listTickets(list=${relationshipWithUser})}" class="tm-btn tm-btn-3 link-mouse-pointer-like-btn">RETURN</a>
+        <a th:href="@{'/listTickets/' + ${currentPage} + '?list=' + ${relationshipWithUser}}" class="tm-btn tm-btn-3 link-mouse-pointer-like-btn">RETURN</a>
+
     </div>
 </footer>
 </div> <!-- .container -->

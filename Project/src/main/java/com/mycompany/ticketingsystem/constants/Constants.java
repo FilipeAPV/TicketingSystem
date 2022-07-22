@@ -22,5 +22,5 @@ public interface Constants {
 
     public static final String DASHBOARD = "dashboard";
 
-    public static final int PAGE_SIZE = 5;
+    public static final int PAGE_SIZE = 3;
 }

@@ -79,7 +79,8 @@ public class DashboardController {
     @PostMapping("/saveTicket")
     public String saveTicket(@Valid @ModelAttribute("ticket") TicketDTO ticketDTO,
                              Errors errors, Model model, HttpSession httpSession,
-                             @RequestParam(value = "relationshipWithUser", required = false) String relationshipWithUser) {
+                             @RequestParam(value = "relationshipWithUser", required = false) String relationshipWithUser,
+                             @RequestParam(value = "currentPage") int currentPage) {
 
 
 
@@ -127,7 +128,7 @@ public class DashboardController {
             } else {
                 path = "admin";
             }
-            return ("redirect:/listTickets?list=" + path);
+            return ("redirect:/listTickets/" + currentPage +"?list=" + path);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.mycompany.ticketingsystem.service;
 
 import com.mycompany.ticketingsystem.constants.Constants;
+import com.mycompany.ticketingsystem.controller.ListTicketsController;
 import com.mycompany.ticketingsystem.controller.LoginController;
 import com.mycompany.ticketingsystem.dto.UserDTO;
 import com.mycompany.ticketingsystem.model.Department;
@@ -30,33 +31,35 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final DepartmentRepository departmentRepository;
     private final UserRepository userRepository;
-    private final LoginController loginController;
+
+    int pageSize = Constants.PAGE_SIZE;
 
     @Autowired
     public TicketService(TicketRepository ticketRepository,
                          DepartmentRepository departmentRepository,
-                         UserRepository userRepository,
-                         LoginController loginController) {
+                         UserRepository userRepository) {
         this.ticketRepository = ticketRepository;
         this.departmentRepository = departmentRepository;
         this.userRepository = userRepository;
-        this.loginController = loginController;
     }
 
     public Ticket getTicketById(int id) {
         return ticketRepository.findById(id).get();
     }
 
-    public List<Ticket> getListOfTicketsByCreator(User userLoggedIn) {
-        return ticketRepository.findByCreatorAndStatusOrderByCreatedAt(userLoggedIn, Constants.TICKET_STATUS_OPEN);
+    public Page<Ticket> getListOfTicketsByCreator(int pageNum, User userLoggedIn) {
+        Pageable pageable = PageRequest.of(pageNum - 1, pageSize);
+        return ticketRepository.findByCreatorAndStatusOrderByCreatedAt(userLoggedIn, Constants.TICKET_STATUS_OPEN, pageable);
     }
 
-    public List<Ticket> getListOfTicketsByAssignee(User userLoggedIn) {
-        return ticketRepository.findByAssigneeAndStatusOrderByCreatedAt(userLoggedIn, Constants.TICKET_STATUS_OPEN);
+    public Page<Ticket> getListOfTicketsByAssignee(int pageNum, User userLoggedIn) {
+        Pageable pageable = PageRequest.of(pageNum - 1, pageSize);
+        return ticketRepository.findByAssigneeAndStatusOrderByCreatedAt(userLoggedIn, Constants.TICKET_STATUS_OPEN, pageable);
     }
 
-    public List<Ticket> getListOfTicketsByDepartment(User userLoggedIn) {
-        return ticketRepository.findByAssigneeDepartmentAndStatusOrderByCreatedAt(userLoggedIn.getDepartment(), Constants.TICKET_STATUS_OPEN);
+    public Page<Ticket> getListOfTicketsByDepartment(int pageNum, User userLoggedIn) {
+        Pageable pageable = PageRequest.of(pageNum-1, pageSize);
+        return ticketRepository.findByAssigneeDepartmentAndStatusOrderByCreatedAt(userLoggedIn.getDepartment(), Constants.TICKET_STATUS_OPEN, pageable);
     }
 
     public Department getDepartmentName(User userLoggedIn) {
@@ -103,7 +106,6 @@ public class TicketService {
     }
 
     public Page<Ticket> findAllWithSpecification(int pageNum, String status, String priority) {
-        int pageSize = Constants.PAGE_SIZE;
 
         Specification<Ticket> specification = Specification
                 .where(status == null ? null : DbFilterSpecification.statusContains(status))

@@ -19,9 +19,9 @@ import java.util.List;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Integer>, JpaSpecificationExecutor<Ticket> {
-    List<Ticket> findByCreatorAndStatusOrderByCreatedAt(User user, String status);
-    List<Ticket> findByAssigneeAndStatusOrderByCreatedAt(User user, String status);
-    List<Ticket> findByAssigneeDepartmentAndStatusOrderByCreatedAt(Department department, String status);
+    Page<Ticket> findByCreatorAndStatusOrderByCreatedAt(User user, String status, Pageable pageable);
+    Page<Ticket> findByAssigneeAndStatusOrderByCreatedAt(User user, String status, Pageable pageable);
+    Page<Ticket> findByAssigneeDepartmentAndStatusOrderByCreatedAt(Department department, String status, Pageable pageable);
     List<Ticket> findByStatus(String status);
     List<Ticket> findByAssigneeIsNotNullAndStatus(String status);
     List<Ticket> findAllByOrderByCreatedAt();
