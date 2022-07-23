@@ -5,8 +5,11 @@ import com.mycompany.ticketingsystem.dto.TicketDTO;
 import com.mycompany.ticketingsystem.dto.UserDTO;
 import com.mycompany.ticketingsystem.model.Ticket;
 import com.mycompany.ticketingsystem.model.User;
+import com.mycompany.ticketingsystem.repository.DepartmentRepository;
 import com.mycompany.ticketingsystem.repository.UserRepository;
 import com.mycompany.ticketingsystem.service.TicketService;
+import com.mycompany.ticketingsystem.service.UserService;
+import com.mycompany.ticketingsystem.utility.ConvertListDTO;
 import com.mycompany.ticketingsystem.utility.StatisticsDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,8 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 public class DashboardController {
@@ -31,15 +36,26 @@ public class DashboardController {
     private final ModelMapper modelMapper;
     private final TicketService ticketService;
     private final StatisticsDTO statisticsDTO;
+    private final UserService userService;
+    private final DepartmentRepository departmentRepository;
+    private final ConvertListDTO convertListDTO;
     private UserDTO userLoggedInDTO;
 
     @Autowired
-    public DashboardController(UserRepository userRepository, ModelMapper modelMapper,
-                               TicketService ticketService, StatisticsDTO statisticsDTO) {
+    public DashboardController(UserRepository userRepository,
+                               ModelMapper modelMapper,
+                               TicketService ticketService,
+                               StatisticsDTO statisticsDTO,
+                               UserService userService,
+                               DepartmentRepository departmentRepository,
+                               ConvertListDTO convertListDTO) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.ticketService = ticketService;
         this.statisticsDTO = statisticsDTO;
+        this.userService = userService;
+        this.departmentRepository = departmentRepository;
+        this.convertListDTO = convertListDTO;
     }
 
     @GetMapping("/dashboard")
@@ -110,7 +126,7 @@ public class DashboardController {
             + " - ");
         }
 
-        com.mycompany.ticketingsystem.model.Ticket ticketToSave = modelMapper.map(ticketDTO, com.mycompany.ticketingsystem.model.Ticket.class);
+        Ticket ticketToSave = modelMapper.map(ticketDTO, Ticket.class);
         User userLoggedIn = (User) httpSession.getAttribute("userLoggedIn");
         Boolean isSaved = ticketService.saveTicket(ticketToSave, userLoggedIn);
 
@@ -130,6 +146,13 @@ public class DashboardController {
             }
             return ("redirect:/listTickets/" + currentPage +"?list=" + path);
         }
+    }
+
+    @GetMapping("/listSuperUsers")
+    public String listSuperUsers() {
+        List<UserDTO> userDTOList = convertListDTO.convertListToListDTO(new UserDTO(), userService.getAllUsers(), UserDTO.class);
+        //TODO do the same thing as above the a list of departments
+        return "list-superusers";
     }
 
 }

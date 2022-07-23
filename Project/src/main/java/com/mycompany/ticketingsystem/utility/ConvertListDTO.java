@@ -47,4 +47,12 @@ public class ConvertListDTO {
         return userDTOList;
     }
 
+    public <T, C> List<T> convertListToListDTO(T returnListType, List<C> listToConvert, Class<T> classNameOfTheReturnListType) {
+        List<T> listDTO = new ArrayList<>();
+        for (C val : listToConvert) {
+            listDTO.add(modelMapper.map(val, classNameOfTheReturnListType));
+        }
+        return listDTO;
+    }
+
 }

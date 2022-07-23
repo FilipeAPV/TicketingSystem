@@ -34,8 +34,6 @@ public class ListTicketsController {
     private final TicketService ticketService;
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
-    private final DepartmentRepository departmentRepository;
-    private final HttpSession httpSession;
     private final ModelMapper modelMapper;
     private final ConvertListDTO convertListDTO;
     private String status = null;
@@ -51,15 +49,11 @@ public class ListTicketsController {
     public ListTicketsController(TicketService ticketService,
                                  TicketRepository ticketRepository,
                                  UserRepository userRepository,
-                                 DepartmentRepository departmentRepository,
-                                 HttpSession httpSession,
                                  ModelMapper modelMapper,
                                  ConvertListDTO convertListDTO) {
         this.ticketService = ticketService;
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
-        this.departmentRepository = departmentRepository;
-        this.httpSession = httpSession;
         this.modelMapper = modelMapper;
         this.convertListDTO = convertListDTO;
     }

@@ -133,7 +133,7 @@ https://templatemo.com/tm-544-comparto
                         <a th:href="@{/listTickets/1?list=assigned}" class="ml-auto tm-btn tm-btn-3 link-mouse-pointer-like-btn" sec:authorize="hasAnyRole('ROLE_USER','ROLE_SUPERUSER')">Assigned Tickets</a>
                         <a th:href="@{/listTickets/1?list=department}" class="ml-auto tm-btn tm-btn-3 link-mouse-pointer-like-btn" sec:authorize="hasRole('ROLE_SUPERUSER')">Department Tickets</a>
                         <a th:href="@{/listTickets/1?list=admin}" class="ml-auto tm-btn tm-btn-3 link-mouse-pointer-like-btn" sec:authorize="hasRole('ROLE_ADMINISTRATOR')">Ticket Detail</a>
-                        <a th:href="@{/listTickets/1?list=department}" class="ml-auto tm-btn tm-btn-3 link-mouse-pointer-like-btn" sec:authorize="hasRole('ROLE_ADMINISTRATOR')">Assign SuperUser</a>
+                        <a th:href="@{/listSuperUsers}" class="ml-auto tm-btn tm-btn-3 link-mouse-pointer-like-btn" sec:authorize="hasRole('ROLE_ADMINISTRATOR')">Assign SuperUser</a>
                         </div>
                     </div>
                 </div>
