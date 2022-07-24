@@ -82,4 +82,8 @@ public class UserService {
 
         return isSaved;
     }
+
+    public List<User> findAllUsersInsideOneDepartment(Department departmentName) {
+        return userRepository.findByDepartment(departmentName);
+    }
 }

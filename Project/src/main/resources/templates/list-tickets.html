@@ -63,18 +63,29 @@
                               required="" disabled></textarea></td>
                 <td><p th:text="${ticket.priority}"></p></td>
                 <td><p th:text="${ticket.createdAt}"></p></td>
-                <td sec:authorize="hasAnyRole('ROLE_SUPERUSER', 'ROLE_ADMINISTRATOR')" >
+                <td sec:authorize="hasRole('ROLE_SUPERUSER')">
                     <form th:action="@{/editAssignee(ticketId=${ticket.id}, relationship=${relationship})}" th:object="${assigneeDTO}" method="POST">
                         <select  th:field="*{assigneeId}" onchange="this.form.submit()">
                             <option value="0" th:text="${ticket?.assignee?.firstName != null ? ticket?.assignee?.firstName + ' ' + ticket?.assignee?.lastName : 'Unassigned' }"></option>
                             <option th:each="user : ${listOfUserDTOInsideDepartment}"
-                                    th:if="${user.email != ticket?.assignee?.email and user.department.name == ticket.creator.department.name}"
+                                    th:if="${user.email != ticket?.assignee?.email and user.role != 'ROLE_ADMINISTRATOR'}"
                                     th:value="${user.id}"
                                     th:text="${user.firstName + ' ' + user.lastName}">
                             </option>
                         </select>
                     </form>
-
+                </td>
+                <td sec:authorize="hasRole('ROLE_ADMINISTRATOR')" >
+                    <form th:action="@{/editAssignee(ticketId=${ticket.id}, relationship=${relationship})}" th:object="${assigneeDTO}" method="POST">
+                        <select  th:field="*{assigneeId}" onchange="this.form.submit()">
+                            <option value="0" th:text="${ticket?.assignee?.firstName != null ? ticket?.assignee?.firstName + ' ' + ticket?.assignee?.lastName + ' - ' + ticket?.assignee?.department.name : 'Unassigned' }"></option>
+                            <option th:each="user : ${listOfUserDTOInsideDepartment}"
+                                    th:if="${user.email != ticket?.assignee?.email}"
+                                    th:value="${user.id}"
+                                    th:text="${user.firstName + ' ' + user.lastName + ' - ' + user.department.name}">
+                            </option>
+                        </select>
+                    </form>
                 </td>
                 <td class="updateAndDelete">
                     <p><a th:href="@{/editTicket(ticketId=${ticket.id},relationship=${relationship}, currentPage=${currentPage})}">Update</a></p>

@@ -98,7 +98,7 @@ public class DashboardController {
     public String saveTicket(@Valid @ModelAttribute("ticket") TicketDTO ticketDTO,
                              Errors errors, Model model, HttpSession httpSession,
                              @RequestParam(value = "relationshipWithUser", required = false) String relationshipWithUser,
-                             @RequestParam(value = "currentPage") int currentPage) {
+                             @RequestParam(value = "currentPage", required = false) Integer currentPage) {
 
 
 

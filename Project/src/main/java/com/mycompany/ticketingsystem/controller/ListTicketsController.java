@@ -7,10 +7,10 @@ import com.mycompany.ticketingsystem.dto.UserDTO;
 import com.mycompany.ticketingsystem.model.Department;
 import com.mycompany.ticketingsystem.model.Ticket;
 import com.mycompany.ticketingsystem.model.User;
-import com.mycompany.ticketingsystem.repository.DepartmentRepository;
 import com.mycompany.ticketingsystem.repository.TicketRepository;
 import com.mycompany.ticketingsystem.repository.UserRepository;
 import com.mycompany.ticketingsystem.service.TicketService;
+import com.mycompany.ticketingsystem.service.UserService;
 import com.mycompany.ticketingsystem.utility.ConvertListDTO;
 import com.mycompany.ticketingsystem.utility.FilterDTO;
 import org.modelmapper.ModelMapper;
@@ -24,9 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 public class ListTicketsController {
@@ -36,6 +34,7 @@ public class ListTicketsController {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final ConvertListDTO convertListDTO;
+    private final UserService userService;
     private String status = null;
     private String priority = null;
     private int totalPages = 0;
@@ -50,12 +49,14 @@ public class ListTicketsController {
                                  TicketRepository ticketRepository,
                                  UserRepository userRepository,
                                  ModelMapper modelMapper,
-                                 ConvertListDTO convertListDTO) {
+                                 ConvertListDTO convertListDTO,
+                                 UserService userService) {
         this.ticketService = ticketService;
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.convertListDTO = convertListDTO;
+        this.userService = userService;
     }
 
     @GetMapping("/listTickets/{pageNum}")
@@ -68,7 +69,7 @@ public class ListTicketsController {
         List<TicketDTO> listTicketsDTO;
         User userLoggedIn = (User) httpSession.getAttribute("userLoggedIn");
         AssigneeDTO assigneeDTO = new AssigneeDTO();
-        Set<UserDTO> listOfUserDTOInsideDepartment = new HashSet<>();
+        List<UserDTO> listOfUserDTOInsideDepartment = new ArrayList<>();
         Page<Ticket> ticketPage;
 
         log.info("\n" + this.getClass() + " @GetMapping(\"/listTickets/{pageNum}\")" + " list= " + listType + " pageNum= " + pageNum);
@@ -90,7 +91,7 @@ public class ListTicketsController {
         } else if (listType.equals("department")){
             Department userLoggedInDepartment = ticketService.getDepartmentName(userLoggedIn);
             String departmentName = userLoggedInDepartment.getName();
-            listOfUserDTOInsideDepartment = convertListDTO.convertUserToDTO(userLoggedInDepartment.getUserList());
+            listOfUserDTOInsideDepartment = convertListDTO.convertListToListDTO(new UserDTO(), userService.findAllUsersInsideOneDepartment(userLoggedInDepartment), UserDTO.class);
 
             message = "TICKETS FOR THE " + " " + departmentName + " " + " DEPARTMENT";
             relationship = "department";
@@ -104,7 +105,7 @@ public class ListTicketsController {
             relationship = "admin";
 
             // List of SuperUsers below
-            listOfUserDTOInsideDepartment = convertListDTO.convertUserToDTO(userRepository.findByRole(Constants.ROLE_SUPERUSER));
+            listOfUserDTOInsideDepartment = convertListDTO.convertListToListDTO(new UserDTO(), userRepository.findByRole(Constants.ROLE_SUPERUSER), UserDTO.class);
 
             ticketPage = ticketService.findAllWithSpecification(pageNum, status, priority);
             setTotalPagesAndElements(ticketPage.getTotalPages(), ticketPage.getTotalElements());
