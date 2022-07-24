@@ -1,6 +1,8 @@
 package com.mycompany.ticketingsystem.controller;
 
 import com.mycompany.ticketingsystem.constants.Constants;
+import com.mycompany.ticketingsystem.dto.DepartmentDTO;
+import com.mycompany.ticketingsystem.dto.SuperUserDTO;
 import com.mycompany.ticketingsystem.dto.TicketDTO;
 import com.mycompany.ticketingsystem.dto.UserDTO;
 import com.mycompany.ticketingsystem.model.Ticket;
@@ -149,10 +151,33 @@ public class DashboardController {
     }
 
     @GetMapping("/listSuperUsers")
-    public String listSuperUsers() {
+    public String listSuperUsers(Model model,
+                                 @RequestParam(name = "saved", required = false) String isSaved) {
         List<UserDTO> userDTOList = convertListDTO.convertListToListDTO(new UserDTO(), userService.getAllUsers(), UserDTO.class);
-        //TODO do the same thing as above the a list of departments
+        List<DepartmentDTO> departmentDTOList = convertListDTO.convertListToListDTO(new DepartmentDTO(), departmentRepository.findAll(), DepartmentDTO.class);
+
+        model.addAttribute("users", userDTOList);
+        model.addAttribute("departments", departmentDTOList);
+        model.addAttribute("superUserDTO", new SuperUserDTO());
+
+        if (isSaved != null) {
+            model.addAttribute("message", "Super User successfully assigned");
+        }
+
         return "list-superusers";
     }
 
+    @PostMapping("/saveSuperUser")
+    public String saveSuperUser(@ModelAttribute(name = "superUserDTO") SuperUserDTO superUserDTO,
+                                @RequestParam(name = "departmentId") int departmentId,
+                                Model model) {
+
+        boolean isSaved = userService.changeRoleToSuperUser(superUserDTO, departmentId);
+
+        if (isSaved) {
+            return "redirect:/listSuperUsers?saved=true";
+        } else {
+            return "redirect:/listSuperUsers";
+        }
+    }
 }

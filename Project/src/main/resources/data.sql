@@ -16,6 +16,7 @@ INSERT INTO `users` (`first_name`, `last_name`, `job_title`, `email`, `manager`,
 INSERT INTO `users` (`first_name`, `last_name`, `job_title`, `email`, `manager`, `password`, `role`,`created_at`, `created_by`, `fk_department_id`) VALUES ('Tom', 'Lim', 'Eng Lead', 'tl@gmail.com', 'Sanchez', '$2a$10$rgxQE//XV8SZrXuCdsl.AOH.DzSIYnknXysKjbLIQZ7khkWI7emI.', 'ROLE_SUPERUSER', CURDATE(), 'AUTOMATIC_FILL', '5');
 INSERT INTO `users` (`first_name`, `last_name`, `job_title`, `email`, `manager`, `password`, `role`,`created_at`, `created_by`, `fk_department_id`) VALUES ('Natacha', 'Kornikova', 'Support Engineer', 'nk@gmail.com', 'Joana', '$2a$10$rgxQE//XV8SZrXuCdsl.AOH.DzSIYnknXysKjbLIQZ7khkWI7emI.', 'ROLE_ADMINISTRATOR', CURDATE(), 'AUTOMATIC_FILL', '1');
 INSERT INTO `users` (`first_name`, `last_name`, `job_title`, `email`, `manager`, `password`, `role`,`created_at`, `created_by`, `fk_department_id`) VALUES ('Alton', 'Schmid', 'Support Trainee', 'as@gmail.com', 'Marta', '$2a$10$rgxQE//XV8SZrXuCdsl.AOH.DzSIYnknXysKjbLIQZ7khkWI7emI.', 'ROLE_USER', CURDATE(), 'AUTOMATIC_FILL', '1');
+INSERT INTO `users` (`first_name`, `last_name`, `job_title`, `email`, `manager`, `password`, `role`,`created_at`, `created_by`, `fk_department_id`) VALUES ('Malgorzata', 'Bosques', 'Graphic Designer', 'mb@gmail.com', 'Marta', '$2a$10$rgxQE//XV8SZrXuCdsl.AOH.DzSIYnknXysKjbLIQZ7khkWI7emI.', 'ROLE_USER', CURDATE(), 'AUTOMATIC_FILL', '6');
 
 INSERT INTO `tickets` (`status`, `subject`, `priority`, `message`, `created_at`, `created_by`,`creator_id`,`assignee_id`,`assignee_derpartment_id`) VALUES ('OPEN', 'My keyboard is broken', 'URGENT', 'Dear IT, my keyboard is broken. Could you kinldy provide me a replacement ?', CURDATE(), 'AUTOMATIC_FILL', '2', '1', '1');
 INSERT INTO `tickets` (`status`, `subject`, `priority`, `message`, `created_at`, `created_by`,`creator_id`,`assignee_id`,`assignee_derpartment_id`) VALUES ('OPEN', 'Video is too long', 'STANDARD', 'Lin, could you please reduce the video from yesterday ? It needs to be less than 5 minutes. Thank you', CURDATE(), 'AUTOMATIC_FILL', '2', '5', '5');
@@ -24,3 +25,8 @@ INSERT INTO `tickets` (`status`, `subject`, `priority`, `message`, `created_at`,
 INSERT INTO `tickets` (`status`, `subject`, `priority`, `message`, `created_at`, `created_by`,`creator_id`,`assignee_id`,`assignee_derpartment_id`) VALUES ('OPEN', 'Instagram Views', 'URGENT', 'URGENT - Patricia, correct the last post ASAP.', CURDATE(), 'AUTOMATIC_FILL', '3', '3', '3');
 INSERT INTO `tickets` (`status`, `subject`, `priority`, `message`, `created_at`, `created_by`,`creator_id`,`assignee_id`,`assignee_derpartment_id`) VALUES ('CLOSED', 'New Laptop', 'URGENT', 'My 10 years old laptop just gave up...', CURDATE(), 'AUTOMATIC_FILL', '3', '1', '1');
 INSERT INTO `tickets` (`status`, `subject`, `priority`, `message`, `created_at`, `created_by`,`creator_id`,`assignee_id`,`assignee_derpartment_id`) VALUES ('CLOSED', 'Instagram Story', 'STANDARD', 'Please edit the video', CURDATE(), 'AUTOMATIC_FILL', '6', null, '3');
+
+UPDATE `departments` SET `super_user_id` = '6' WHERE `department_id` = '1';
+UPDATE `departments` SET `super_user_id` = '7' WHERE `department_id` = '2';
+UPDATE `departments` SET `super_user_id` = '8' WHERE `department_id` = '3';
+UPDATE `departments` SET `super_user_id` = '9' WHERE `department_id` = '5';
