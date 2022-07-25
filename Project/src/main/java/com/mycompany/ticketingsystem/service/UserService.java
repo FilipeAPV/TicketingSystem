@@ -80,14 +80,18 @@ public class UserService {
 
         Optional<Department> departmentToFecthSuperUserOpt = departmentRepository.findById(departmentId);
 
-        Optional<User> userToRemoveSuperUserRoleOpt = userRepository.findById(departmentToFecthSuperUser.getSuperUserId().getId());
-
-            if (userToAddSuperUserRoleOpt.isPresent() && departmentToFecthSuperUserOpt.isPresent()) {
-                userToRemoveSuperUserRole = userToRemoveSuperUserRoleOpt.get();
+            if (departmentToFecthSuperUserOpt.isPresent()) {
                 departmentToFecthSuperUser = departmentToFecthSuperUserOpt.get();
             } else {
-                throw new Exception("User with id: " + departmentToFecthSuperUser.getSuperUserId() + " not found OR department with id: "
-                        + departmentId + " not found");
+                throw new Exception("Department with id: " + departmentId + " not found");
+            }
+
+        Optional<User> userToRemoveSuperUserRoleOpt = userRepository.findById(departmentToFecthSuperUser.getSuperUserId().getId());
+
+            if (userToRemoveSuperUserRoleOpt.isPresent()) {
+                userToRemoveSuperUserRole = userToRemoveSuperUserRoleOpt.get();
+            } else {
+                throw new Exception("User with id: " + departmentToFecthSuperUser.getSuperUserId() + " not found");
             }
 
         userToRemoveSuperUserRole.setRole(Constants.ROLE_USER);

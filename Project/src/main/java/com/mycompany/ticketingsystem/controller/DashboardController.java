@@ -98,7 +98,7 @@ public class DashboardController {
     public String saveTicket(@Valid @ModelAttribute("ticket") TicketDTO ticketDTO,
                              Errors errors, Model model, HttpSession httpSession,
                              @RequestParam(value = "relationshipWithUser", required = false) String relationshipWithUser,
-                             @RequestParam(value = "currentPage", required = false) Integer currentPage) {
+                             @RequestParam(value = "currentPage", required = false) Integer currentPage) throws Exception {
 
 
 
@@ -130,6 +130,11 @@ public class DashboardController {
 
         Ticket ticketToSave = modelMapper.map(ticketDTO, Ticket.class);
         User userLoggedIn = (User) httpSession.getAttribute(USER_CURRENTLY_LOGGED_IN);
+
+            if (userLoggedIn == null) {
+                throw new Exception("Could not identify the logged in User!");
+            }
+
         Boolean isSaved = ticketService.saveTicket(ticketToSave, userLoggedIn);
 
         if (Boolean.TRUE.equals(isSaved) && (ticketToEdit==null)) { // Does not throw NPE if isSaved is null. It will take it as false.

@@ -93,6 +93,10 @@ public class ListTicketsController {
 
         } else if (listType.equals("department")){
 
+            if (userLoggedIn == null) {
+                throw new Exception("Could not identify the logged in User!");
+            }
+
             Department userLoggedInDepartment = ticketService.getDepartmentName(userLoggedIn);
             String departmentName = userLoggedInDepartment.getName();
             listOfUserDTOInsideDepartment = convertListDTO.convertListToListDTO(userService.findAllUsersInsideOneDepartment(userLoggedInDepartment), UserDTO.class);

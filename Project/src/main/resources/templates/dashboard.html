@@ -11,6 +11,9 @@
     <link href="/css/templatemo-comparto.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.3.1/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
     <title>Ticketing System</title>
 <!--
 
@@ -36,9 +39,9 @@ https://templatemo.com/tm-544-comparto
                     <ul>
                         <li th:each="error : ${#fields.errors('ticket.*')}" th:text="${error}" />
                     </ul>
-                    <ul>
-                        <li th:if="${!#strings.isEmpty(message)}" th:text="${message}"/>
-                    </ul>
+                    <div class="alert alert-primary" role="alert" th:if="${!#strings.isEmpty(message)}">
+                        <p  th:text="${message}"/>
+                    </div>
                     <form th:object="${ticket}" id="contact-form" th:action="@{/saveTicket}" method="POST" class="tm-bg-color-6 tm-contact-form">
                         <div class="form-group">
                             <input th:field="*{subject}" type="text" name="name" class="form-control" placeholder="Subject"/>
