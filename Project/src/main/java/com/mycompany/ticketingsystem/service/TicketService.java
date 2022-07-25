@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TicketService {
@@ -43,8 +44,13 @@ public class TicketService {
         this.userRepository = userRepository;
     }
 
-    public Ticket getTicketById(int id) {
-        return ticketRepository.findById(id).get();
+    public Ticket getTicketById(int id) throws Exception {
+        Optional<Ticket> optinalTicket = ticketRepository.findById(id);
+
+        if (optinalTicket.isPresent()) {
+            return optinalTicket.get();
+        }
+        throw new Exception("Result for getTicketById " + id + " is Null");
     }
 
     public Page<Ticket> getListOfTicketsByCreator(int pageNum, User userLoggedIn) {

@@ -50,9 +50,8 @@ public class AuthenticationProviderPswEmail implements AuthenticationProvider {
             return new UsernamePasswordAuthenticationToken(
                     user.getEmail(), null, getGrantedAuthorities(user)
                     /*
-                    Changed from user.getFirstName to .getEmail() because of this line in the /dashboardController
-
-                     User userLoggedIn  = userRepository.findByEmail(authentication.getName());
+                    Changed from user.getFirstName to .getEmail() because of this line in the /dashboardController:
+                        User userLoggedIn  = userRepository.findByEmail(authentication.getName());
                      */
             );
         } else {

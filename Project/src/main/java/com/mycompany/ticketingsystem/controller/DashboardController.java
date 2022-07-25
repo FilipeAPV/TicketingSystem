@@ -29,7 +29,9 @@ import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
+
+import static com.mycompany.ticketingsystem.constants.Constants.REDIRECT_TO_LISTICKETS;
+import static com.mycompany.ticketingsystem.constants.Constants.USER_CURRENTLY_LOGGED_IN;
 
 @Controller
 public class DashboardController {
@@ -65,10 +67,8 @@ public class DashboardController {
                                @RequestParam(value = "saved", required = false) String isSaved,
                                HttpSession httpSession) {
 
-        //TODO if the only need of the model attribute is to pass the first name, then we need to send only
-        //the string
         User userLoggedIn  = userRepository.findByEmail(authentication.getName());
-        httpSession.setAttribute("userLoggedIn", userLoggedIn);
+        httpSession.setAttribute(USER_CURRENTLY_LOGGED_IN, userLoggedIn);
         userLoggedInDTO = modelMapper.map(userLoggedIn, UserDTO.class);
 
         String message = null;
@@ -79,7 +79,7 @@ public class DashboardController {
         model.addAttribute("ticket", new TicketDTO());
         model.addAttribute("priorityList", Constants.ticketPriority);
         model.addAttribute("message", message);
-        model.addAttribute("userLoggedIn", userLoggedInDTO);
+        model.addAttribute(USER_CURRENTLY_LOGGED_IN, userLoggedInDTO);
 
 
         if (authentication.getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ROLE_ADMINISTRATOR"))) {
@@ -104,7 +104,7 @@ public class DashboardController {
 
         if (errors.hasErrors()) {
             model.addAttribute("priorityList", Constants.ticketPriority);
-            model.addAttribute("userLoggedIn", userLoggedInDTO);
+            model.addAttribute(USER_CURRENTLY_LOGGED_IN, userLoggedInDTO);
             return Constants.DASHBOARD;
         }
 
@@ -129,10 +129,10 @@ public class DashboardController {
         }
 
         Ticket ticketToSave = modelMapper.map(ticketDTO, Ticket.class);
-        User userLoggedIn = (User) httpSession.getAttribute("userLoggedIn");
+        User userLoggedIn = (User) httpSession.getAttribute(USER_CURRENTLY_LOGGED_IN);
         Boolean isSaved = ticketService.saveTicket(ticketToSave, userLoggedIn);
 
-        if (Boolean.TRUE.equals(isSaved) && !(ticketToEdit!=null)) { // Does not throw NPE if isSaved is null. It will take it as false.
+        if (Boolean.TRUE.equals(isSaved) && (ticketToEdit==null)) { // Does not throw NPE if isSaved is null. It will take it as false.
             return "redirect:/dashboard?saved=true";
         } else {
             httpSession.removeAttribute("ticketToEdit");
@@ -146,15 +146,15 @@ public class DashboardController {
             } else {
                 path = "admin";
             }
-            return ("redirect:/listTickets/" + currentPage +"?list=" + path);
+            return (REDIRECT_TO_LISTICKETS + currentPage +"?list=" + path);
         }
     }
 
     @GetMapping("/listSuperUsers")
     public String listSuperUsers(Model model,
                                  @RequestParam(name = "saved", required = false) String isSaved) {
-        List<UserDTO> userDTOList = convertListDTO.convertListToListDTO(new UserDTO(), userService.getAllUsers(), UserDTO.class);
-        List<DepartmentDTO> departmentDTOList = convertListDTO.convertListToListDTO(new DepartmentDTO(), departmentRepository.findAll(), DepartmentDTO.class);
+        List<UserDTO> userDTOList = convertListDTO.convertListToListDTO(userService.getAllUsers(), UserDTO.class);
+        List<DepartmentDTO> departmentDTOList = convertListDTO.convertListToListDTO(departmentRepository.findAll(), DepartmentDTO.class);
 
         model.addAttribute("users", userDTOList);
         model.addAttribute("departments", departmentDTOList);

@@ -26,6 +26,9 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mycompany.ticketingsystem.constants.Constants.REDIRECT_TO_LISTICKETS;
+import static com.mycompany.ticketingsystem.constants.Constants.USER_CURRENTLY_LOGGED_IN;
+
 @Controller
 public class ListTicketsController {
 
@@ -67,7 +70,7 @@ public class ListTicketsController {
         String message = null;
         String relationship = null;
         List<TicketDTO> listTicketsDTO;
-        User userLoggedIn = (User) httpSession.getAttribute("userLoggedIn");
+        User userLoggedIn = (User) httpSession.getAttribute(USER_CURRENTLY_LOGGED_IN);
         AssigneeDTO assigneeDTO = new AssigneeDTO();
         List<UserDTO> listOfUserDTOInsideDepartment = new ArrayList<>();
         Page<Ticket> ticketPage;
@@ -79,37 +82,37 @@ public class ListTicketsController {
             relationship = "created";
             ticketPage = ticketService.getListOfTicketsByCreator(pageNum, userLoggedIn);
             setTotalPagesAndElements(ticketPage.getTotalPages(), ticketPage.getTotalElements());
-            listTicketsDTO = convertListDTO.convertListToListDTO(new TicketDTO(), ticketPage.getContent(), TicketDTO.class);
+            listTicketsDTO = convertListDTO.convertListToListDTO(ticketPage.getContent(), TicketDTO.class);
 
         } else if (listType.equals("assigned")){
             message = "ASSIGNED TICKETS";
             relationship = "assigned";
             ticketPage = ticketService.getListOfTicketsByAssignee(pageNum, userLoggedIn);
             setTotalPagesAndElements(ticketPage.getTotalPages(), ticketPage.getTotalElements());
-            listTicketsDTO = convertListDTO.convertListToListDTO(new TicketDTO(), ticketPage.getContent(), TicketDTO.class);
+            listTicketsDTO = convertListDTO.convertListToListDTO(ticketPage.getContent(), TicketDTO.class);
 
         } else if (listType.equals("department")){
             Department userLoggedInDepartment = ticketService.getDepartmentName(userLoggedIn);
             String departmentName = userLoggedInDepartment.getName();
-            listOfUserDTOInsideDepartment = convertListDTO.convertListToListDTO(new UserDTO(), userService.findAllUsersInsideOneDepartment(userLoggedInDepartment), UserDTO.class);
+            listOfUserDTOInsideDepartment = convertListDTO.convertListToListDTO(userService.findAllUsersInsideOneDepartment(userLoggedInDepartment), UserDTO.class);
 
             message = "TICKETS FOR THE " + " " + departmentName + " " + " DEPARTMENT";
             relationship = "department";
 
             ticketPage = ticketService.getListOfTicketsByDepartment(pageNum, userLoggedIn);
             setTotalPagesAndElements(ticketPage.getTotalPages(), ticketPage.getTotalElements());
-            listTicketsDTO = convertListDTO.convertListToListDTO(new TicketDTO(), ticketPage.getContent(), TicketDTO.class);
+            listTicketsDTO = convertListDTO.convertListToListDTO(ticketPage.getContent(), TicketDTO.class);
 
         } else if (listType.equals("admin")) {
             message = "ADMIN CONSOLE";
             relationship = "admin";
 
             // List of SuperUsers below
-            listOfUserDTOInsideDepartment = convertListDTO.convertListToListDTO(new UserDTO(), userRepository.findByRole(Constants.ROLE_SUPERUSER), UserDTO.class);
+            listOfUserDTOInsideDepartment = convertListDTO.convertListToListDTO(userRepository.findByRole(Constants.ROLE_SUPERUSER), UserDTO.class);
 
             ticketPage = ticketService.findAllWithSpecification(pageNum, status, priority);
             setTotalPagesAndElements(ticketPage.getTotalPages(), ticketPage.getTotalElements());
-            listTicketsDTO = convertListDTO.convertListToListDTO(new TicketDTO(), ticketPage.getContent(), TicketDTO.class);
+            listTicketsDTO = convertListDTO.convertListToListDTO(ticketPage.getContent(), TicketDTO.class);
 
             model.addAttribute("filter", (filterDTOfromHtml != null) ? filterDTOfromHtml : new FilterDTO());
         } else {
@@ -138,7 +141,12 @@ public class ListTicketsController {
                              @RequestParam("currentPage") int currentPage,
                              Model model, HttpSession httpSession) {
 
-        Ticket ticketToEdit = ticketService.getTicketById(ticketId);
+        Ticket ticketToEdit = new Ticket();
+        try {
+            ticketToEdit = ticketService.getTicketById(ticketId);
+        } catch (Exception e) {
+            System.out.println("eror");
+        }
         TicketDTO ticketToEditDTO = modelMapper.map(ticketToEdit, TicketDTO.class);
 
         model.addAttribute("ticket", ticketToEditDTO);
@@ -163,7 +171,7 @@ public class ListTicketsController {
             ticketService.editAssignee(assigneeDTO.getAssigneeId(), ticketId);
         }
 
-        return ("redirect:/listTickets/" + currentPage + "?list=" + path);
+        return (REDIRECT_TO_LISTICKETS + currentPage + "?list=" + path);
     }
 
     @PostMapping("/filterlist")
@@ -175,17 +183,23 @@ public class ListTicketsController {
         status = (filterDTOfromHtml.isOpen()) ? Constants.TICKET_STATUS_OPEN : null;
         priority = (filterDTOfromHtml.isHigh()) ? Constants.TICKET_PRIORITY_URGENT : null;
 
-        return "redirect:/listTickets/" + currentPage + "?list=" + relationship;
+        return REDIRECT_TO_LISTICKETS + currentPage + "?list=" + relationship;
     }
 
     @GetMapping("/closeTicket")
     public String deleteTicket(@RequestParam("ticketId") int id,
                                @RequestParam("relationship") String relationshipWithUser,
                                @RequestParam("currentPage") int currentPage) {
-        com.mycompany.ticketingsystem.model.Ticket ticketToClose = ticketRepository.findById(id).get();
+        Ticket ticketToClose;
+        try {
+            ticketToClose = ticketService.getTicketById(id);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "redirect:/dashboard";
+        }
         ticketToClose.setStatus(Constants.TICKET_STATUS_CLOSED);
         ticketRepository.save(ticketToClose);
-        return "redirect:/listTickets/" + currentPage + "?list=" + relationshipWithUser;
+        return REDIRECT_TO_LISTICKETS + currentPage + "?list=" + relationshipWithUser;
     }
 
     public void setTotalPagesAndElements(int totalPages, long totalElements) {

@@ -16,7 +16,7 @@ public class ConvertListDTO {
         this.modelMapper = modelMapper;
     }
 
-    public <T, C> List<T> convertListToListDTO(T returnListType, List<C> listToConvert, Class<T> classNameOfTheReturnListType) {
+    public <T, C> List<T> convertListToListDTO(List<C> listToConvert, Class<T> classNameOfTheReturnListType) {
         List<T> listDTO = new ArrayList<>();
         for (C val : listToConvert) {
             listDTO.add(modelMapper.map(val, classNameOfTheReturnListType));
