@@ -1,7 +1,11 @@
 package com.mycompany.ticketingsystem.model;
 
+import com.mycompany.ticketingsystem.annotation.EmailMustBeUnique;
 import com.mycompany.ticketingsystem.annotation.FieldsValueMatch;
 import com.mycompany.ticketingsystem.constants.Constants;
+import com.mycompany.ticketingsystem.controller.ListTicketsController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -12,18 +16,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@FieldsValueMatch.List({
-        @FieldsValueMatch(
-                field = "password",
-                fieldMatch = "confirmPassword",
-                message = "Passwords must match"
-        ),
-        @FieldsValueMatch(
-                field = "email",
-                fieldMatch = "confirmEmail",
-                message = "Email addresses must match"
-        )
-})
 public class User extends BaseEntity implements Serializable {
 
     @Id
@@ -31,29 +23,22 @@ public class User extends BaseEntity implements Serializable {
     @Column(name = "user_id")
     private int id;
 
-    @NotBlank(message = "First name cannot be blank")
     @Column(name = "first_name")
     private String firstName;
 
-    @NotBlank(message = "Last name cannot be blank")
     @Column(name = "last_name")
     private String lastName;
 
-    @NotBlank(message = "Job title cannot be blank")
     @Column(name = "job_title")
     private String jobTitle;
 
-    @NotBlank(message = "Email cannot be blank")
-    @Email(message = "Please provide a valid email address")
     private String email;
 
     @Transient
     private String confirmEmail;
 
-    @NotBlank(message = "Manager name cannot be blank")
     private String manager;
 
-    @NotBlank(message = "Password cannot be blank")
     private String password;
 
     @Transient
@@ -70,6 +55,8 @@ public class User extends BaseEntity implements Serializable {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "assignee")
     private Set<Ticket> assignedTicketsList = new HashSet();
+
+    private static Logger log = LoggerFactory.getLogger(User.class);
 
     public int getId() {
         return id;
@@ -170,6 +157,7 @@ public class User extends BaseEntity implements Serializable {
     }
 
     public void setCreatedTicketsList(Ticket ticket) {
+        log.info(ticket + "has been added to " + this.getEmail() + " created tickets list");
         this.createdTicketsList.add(ticket);
     }
 

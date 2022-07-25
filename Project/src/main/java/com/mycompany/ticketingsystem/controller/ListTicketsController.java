@@ -79,14 +79,14 @@ public class ListTicketsController {
             relationship = "created";
             ticketPage = ticketService.getListOfTicketsByCreator(pageNum, userLoggedIn);
             setTotalPagesAndElements(ticketPage.getTotalPages(), ticketPage.getTotalElements());
-            listTicketsDTO = convertListDTO.convertTicketToDTO(ticketPage.getContent());
+            listTicketsDTO = convertListDTO.convertListToListDTO(new TicketDTO(), ticketPage.getContent(), TicketDTO.class);
 
         } else if (listType.equals("assigned")){
             message = "ASSIGNED TICKETS";
             relationship = "assigned";
             ticketPage = ticketService.getListOfTicketsByAssignee(pageNum, userLoggedIn);
             setTotalPagesAndElements(ticketPage.getTotalPages(), ticketPage.getTotalElements());
-            listTicketsDTO = convertListDTO.convertTicketToDTO(ticketPage.getContent());
+            listTicketsDTO = convertListDTO.convertListToListDTO(new TicketDTO(), ticketPage.getContent(), TicketDTO.class);
 
         } else if (listType.equals("department")){
             Department userLoggedInDepartment = ticketService.getDepartmentName(userLoggedIn);
@@ -98,7 +98,7 @@ public class ListTicketsController {
 
             ticketPage = ticketService.getListOfTicketsByDepartment(pageNum, userLoggedIn);
             setTotalPagesAndElements(ticketPage.getTotalPages(), ticketPage.getTotalElements());
-            listTicketsDTO = convertListDTO.convertTicketToDTO(ticketPage.getContent());
+            listTicketsDTO = convertListDTO.convertListToListDTO(new TicketDTO(), ticketPage.getContent(), TicketDTO.class);
 
         } else if (listType.equals("admin")) {
             message = "ADMIN CONSOLE";
@@ -109,7 +109,7 @@ public class ListTicketsController {
 
             ticketPage = ticketService.findAllWithSpecification(pageNum, status, priority);
             setTotalPagesAndElements(ticketPage.getTotalPages(), ticketPage.getTotalElements());
-            listTicketsDTO = convertListDTO.convertTicketToDTO(ticketPage.getContent());
+            listTicketsDTO = convertListDTO.convertListToListDTO(new TicketDTO(), ticketPage.getContent(), TicketDTO.class);
 
             model.addAttribute("filter", (filterDTOfromHtml != null) ? filterDTOfromHtml : new FilterDTO());
         } else {
@@ -154,7 +154,8 @@ public class ListTicketsController {
     @PostMapping("/editAssignee")
     public String editAssignee(@ModelAttribute("assigneeDTO") AssigneeDTO assigneeDTO,
                                @RequestParam("ticketId") int ticketId,
-                               @RequestParam("relationship") String relationship) {
+                               @RequestParam("relationship") String relationship,
+                               @RequestParam("currentPage") int currentPage) {
 
         String path = relationship;
 
@@ -162,7 +163,7 @@ public class ListTicketsController {
             ticketService.editAssignee(assigneeDTO.getAssigneeId(), ticketId);
         }
 
-        return ("redirect:/listTickets?list=" + path);
+        return ("redirect:/listTickets/" + currentPage + "?list=" + path);
     }
 
     @PostMapping("/filterlist")

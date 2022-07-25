@@ -38,6 +38,8 @@ public class UserService {
 
         //Hash the plain text password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Constants.ROLE_USER);
+
 
         user = userRepository.save(user);
         if (user != null && user.getId() > 0) {

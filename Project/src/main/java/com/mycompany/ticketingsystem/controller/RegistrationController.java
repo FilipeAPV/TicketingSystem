@@ -43,22 +43,23 @@ public class RegistrationController {
 
     @GetMapping("/registrationForm")
     public String showRegistrationForm(Model model, HttpSession httpSession) {
-
-        UserDTO modelUser = new UserDTO();
+        
         departmentList = departmentRepository.findAll();
 
-        model.addAttribute("newUser", modelUser);
+        model.addAttribute("newUser", new UserDTO());
         model.addAttribute(Constants.DEPARTMENT_LIST, departmentList);
 
         return Constants.REGISTRATIONFORM;
     }
 
     @PostMapping("/saveRegistrationForm")
-    public String saveRegistrationForm(@Valid @ModelAttribute("newUser") UserDTO userDTO, Errors errors,
-                                       Model model, HttpSession httpSession) {
+    public String saveRegistrationForm(@Valid @ModelAttribute("newUser") UserDTO userDTO,
+                                       Errors errors,
+                                       Model model) {
 
         if (errors.hasErrors()) {
             model.addAttribute(Constants.DEPARTMENT_LIST, departmentList);
+            model.addAttribute("errormsg","true");
             return Constants.REGISTRATIONFORM;
         }
 

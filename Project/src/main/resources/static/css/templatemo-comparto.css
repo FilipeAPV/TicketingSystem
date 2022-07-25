@@ -615,7 +615,7 @@ figure.effect-bubba:hover p {
 }
 
 #contact-form {
-  height: 100%;
+  /*height: 100%; Commented because the register form was going over the banner*/
   padding: 35px 65px;
 }
 

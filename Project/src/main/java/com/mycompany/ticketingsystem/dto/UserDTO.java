@@ -1,10 +1,23 @@
 package com.mycompany.ticketingsystem.dto;
 
+import com.mycompany.ticketingsystem.annotation.EmailMustBeUnique;
+import com.mycompany.ticketingsystem.annotation.FieldsValueMatch;
 import com.mycompany.ticketingsystem.model.Department;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-
+@FieldsValueMatch.List({
+        @FieldsValueMatch(
+                field = "password",
+                fieldMatch = "confirmPassword",
+                message = "Passwords must match"
+        ),
+        @FieldsValueMatch(
+                field = "email",
+                fieldMatch = "confirmEmail",
+                message = "Email addresses must match"
+        )
+})
 public class UserDTO {
     private int id;
 
@@ -19,6 +32,7 @@ public class UserDTO {
 
     @NotBlank(message = "Email cannot be blank")
     @Email(message = "Please provide a valid email address")
+    @EmailMustBeUnique
     private String email;
 
     private String confirmEmail;
