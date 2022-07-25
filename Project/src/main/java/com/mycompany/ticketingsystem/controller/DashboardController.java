@@ -170,7 +170,7 @@ public class DashboardController {
     @PostMapping("/saveSuperUser")
     public String saveSuperUser(@ModelAttribute(name = "superUserDTO") SuperUserDTO superUserDTO,
                                 @RequestParam(name = "departmentId") int departmentId,
-                                Model model) {
+                                Model model) throws Exception {
 
         boolean isSaved = userService.changeRoleToSuperUser(superUserDTO, departmentId);
 

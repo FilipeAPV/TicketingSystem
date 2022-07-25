@@ -1,7 +1,6 @@
 package com.mycompany.ticketingsystem.service;
 
 import com.mycompany.ticketingsystem.constants.Constants;
-import com.mycompany.ticketingsystem.controller.ListTicketsController;
 import com.mycompany.ticketingsystem.dto.SuperUserDTO;
 import com.mycompany.ticketingsystem.model.Department;
 import com.mycompany.ticketingsystem.model.User;
@@ -14,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -42,7 +42,7 @@ public class UserService {
 
 
         user = userRepository.save(user);
-        if (user != null && user.getId() > 0) {
+        if (user.getId() > 0) {
             isSaved = true;
         }
 
@@ -58,29 +58,49 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public boolean changeRoleToSuperUser(SuperUserDTO superUserDTO, int departmentId) {
+    public boolean changeRoleToSuperUser(SuperUserDTO superUserDTO, int departmentId) throws Exception {
         boolean isSaved = false;
+        User userToAddSuperUserRole = new User();
+        User userToRemoveSuperUserRole = new User();
+        Department departmentToFecthSuperUser = new Department();
 
-        User userToAddSuperUserRole = userRepository.findById(superUserDTO.getId()).get();
+        Optional<User> userToAddSuperUserRoleOpt = userRepository.findById(superUserDTO.getId());
+
+            if (userToAddSuperUserRoleOpt.isPresent()) {
+                userToAddSuperUserRole = userToAddSuperUserRoleOpt.get();
+            } else {
+                throw new Exception("User with id: " + superUserDTO.getId() + " not found");
+            }
+
         userToAddSuperUserRole.setRole(Constants.ROLE_SUPERUSER);
         User tempUser = userRepository.save(userToAddSuperUserRole);
         log.info(" | User " + userToAddSuperUserRole.getEmail() + " promoted to SUPER_USER");
 
-        isSaved = (tempUser.getId() != 0);
+        isSaved = (tempUser.getId() > 0);
 
-        Department departmentToFecthSuperUser = departmentRepository.findById(departmentId).get();
-        User userToRemoveSuperUserRole = userRepository.findById(departmentToFecthSuperUser.getSuperUserId().getId()).get();
+        Optional<Department> departmentToFecthSuperUserOpt = departmentRepository.findById(departmentId);
+
+        Optional<User> userToRemoveSuperUserRoleOpt = userRepository.findById(departmentToFecthSuperUser.getSuperUserId().getId());
+
+            if (userToAddSuperUserRoleOpt.isPresent() && departmentToFecthSuperUserOpt.isPresent()) {
+                userToRemoveSuperUserRole = userToRemoveSuperUserRoleOpt.get();
+                departmentToFecthSuperUser = departmentToFecthSuperUserOpt.get();
+            } else {
+                throw new Exception("User with id: " + departmentToFecthSuperUser.getSuperUserId() + " not found OR department with id: "
+                        + departmentId + " not found");
+            }
+
         userToRemoveSuperUserRole.setRole(Constants.ROLE_USER);
         User tempUser2 = userRepository.save(userToRemoveSuperUserRole);
         log.info(" | User " + userToRemoveSuperUserRole.getEmail() + " new role is ROLE_USER");
 
-        isSaved = (tempUser2.getId() != 0);
+        isSaved = (false) ? false : (tempUser2.getId() > 0);
 
         departmentToFecthSuperUser.setSuperUserId(userToAddSuperUserRole);
         Department tempDepartment = departmentRepository.save(departmentToFecthSuperUser);
         log.info(" | Department " + departmentToFecthSuperUser.getName() + " new SUPERUSER is " + userToAddSuperUserRole.getEmail());
 
-        isSaved = (tempDepartment.getId() != 0);
+        isSaved = (false) ? false : (tempDepartment.getId() != 0);
 
         return isSaved;
     }

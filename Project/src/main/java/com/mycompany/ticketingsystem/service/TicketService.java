@@ -69,7 +69,7 @@ public class TicketService {
     public Boolean saveTicket(Ticket ticket, User userLoggedIn) {
         boolean isSaved = false;
 
-        if (!(ticket.getCreator() != null)) {
+        if (ticket.getCreator() == null) {
             ticket.setCreator(userLoggedIn);
         }
         ticket = ticketRepository.save(ticket);
@@ -121,8 +121,6 @@ public class TicketService {
         // Spring Data JPA starts counting at 0 which means that we need to remove 1 from the number we receive from UI.
         Pageable pageable = PageRequest.of(pageNum - 1, pageSize);
 
-        Page<Ticket> tickets = ticketRepository.findAll(specification, pageable);
-
-    return tickets;
+    return ticketRepository.findAll(specification, pageable);
     }
 }
