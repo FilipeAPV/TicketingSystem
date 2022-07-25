@@ -13,12 +13,12 @@ public final class Constants {
     public static final String TICKET_STATUS_CLOSED = "CLOSED";
     public static final String TICKET_STATUS_INVALID = "INVALID";
 
-    public static List<String> ticketStatus = List.of(TICKET_STATUS_OPEN, TICKET_STATUS_DELIVERED, TICKET_STATUS_CLOSED, TICKET_STATUS_INVALID);
+    public static final List<String> ticketStatus = List.of(TICKET_STATUS_OPEN, TICKET_STATUS_DELIVERED, TICKET_STATUS_CLOSED, TICKET_STATUS_INVALID);
 
     public static final String TICKET_PRIORITY_STANDARD = "STANDARD";
     public static final String TICKET_PRIORITY_URGENT = "URGENT";
 
-    public static List<String> ticketPriority = List.of(TICKET_PRIORITY_STANDARD, TICKET_PRIORITY_URGENT);
+    public static final List<String> ticketPriority = List.of(TICKET_PRIORITY_STANDARD, TICKET_PRIORITY_URGENT);
 
     public static final String USER_CURRENTLY_LOGGED_IN = "userLoggedIn";
     public static final String REDIRECT_TO_LISTICKETS = "redirect:/listTickets/";

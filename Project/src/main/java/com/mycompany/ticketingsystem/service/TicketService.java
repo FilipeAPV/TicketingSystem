@@ -1,9 +1,6 @@
 package com.mycompany.ticketingsystem.service;
 
 import com.mycompany.ticketingsystem.constants.Constants;
-import com.mycompany.ticketingsystem.controller.ListTicketsController;
-import com.mycompany.ticketingsystem.controller.LoginController;
-import com.mycompany.ticketingsystem.dto.UserDTO;
 import com.mycompany.ticketingsystem.model.Department;
 import com.mycompany.ticketingsystem.model.Ticket;
 import com.mycompany.ticketingsystem.model.User;
@@ -11,19 +8,10 @@ import com.mycompany.ticketingsystem.repository.DepartmentRepository;
 import com.mycompany.ticketingsystem.repository.TicketRepository;
 import com.mycompany.ticketingsystem.repository.UserRepository;
 import com.mycompany.ticketingsystem.utility.DbFilterSpecification;
-import com.mycompany.ticketingsystem.utility.FilterDTO;
-import org.apache.catalina.session.StandardSession;
-import org.apache.catalina.session.StandardSessionFacade;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.TypedQuery;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,8 +56,14 @@ public class TicketService {
         return ticketRepository.findByAssigneeDepartmentAndStatusOrderByCreatedAt(userLoggedIn.getDepartment(), Constants.TICKET_STATUS_OPEN, pageable);
     }
 
-    public Department getDepartmentName(User userLoggedIn) {
-        return departmentRepository.findById(userLoggedIn.getDepartment().getId()).get();
+    public Department getDepartmentName(User userLoggedIn) throws Exception{
+        Optional<Department> tempDepartment = departmentRepository.findById(userLoggedIn.getDepartment().getId());
+
+        if (tempDepartment.isPresent()) {
+            return tempDepartment.get();
+        }
+
+        throw new Exception("Result for getDepartmentName " + userLoggedIn.getDepartment().getId() + " is Null");
     }
 
     public Boolean saveTicket(Ticket ticket, User userLoggedIn) {
@@ -87,9 +81,16 @@ public class TicketService {
         return isSaved;
     }
 
-    public void editAssignee(int assigneeId, Integer ticketId) {
-        Ticket ticketToChangeAssignee = ticketRepository.findById(ticketId).get();
-        User userToAddAsAssignee = userRepository.findById(assigneeId).get();
+    public void editAssignee(int assigneeId, Integer ticketId) throws Exception {
+        Optional<Ticket> ticketToChangeAssigneeOpt = ticketRepository.findById(ticketId);
+        Optional<User> userToAddAsAssigneeOpt = userRepository.findById(assigneeId);
+
+            if (ticketToChangeAssigneeOpt.isEmpty() || userToAddAsAssigneeOpt.isEmpty()) {
+                throw new Exception("Ticket id: " + ticketId + "OR user id: " + assigneeId + " do not exist");
+            }
+
+        Ticket ticketToChangeAssignee = ticketToChangeAssigneeOpt.get();
+        User userToAddAsAssignee = userToAddAsAssigneeOpt.get();
 
         ticketToChangeAssignee.setAssignee(userToAddAsAssignee);
         ticketToChangeAssignee.setAssigneeDepartment(userToAddAsAssignee.getDepartment());

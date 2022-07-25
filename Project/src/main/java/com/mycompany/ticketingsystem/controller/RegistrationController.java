@@ -5,7 +5,6 @@ import com.mycompany.ticketingsystem.dto.UserDTO;
 import com.mycompany.ticketingsystem.model.Department;
 import com.mycompany.ticketingsystem.model.User;
 import com.mycompany.ticketingsystem.repository.DepartmentRepository;
-import com.mycompany.ticketingsystem.repository.UserRepository;
 import com.mycompany.ticketingsystem.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +25,16 @@ import java.util.List;
 public class RegistrationController {
 
     private final DepartmentRepository departmentRepository;
-    private final UserRepository userRepository;
     private final UserService userService;
     private final ModelMapper modelMapper;
 
     private List<Department> departmentList;
 
     @Autowired
-    public RegistrationController(DepartmentRepository departmentRepository, UserRepository userRepository,
-                                  UserService userService, ModelMapper modelMapper) {
+    public RegistrationController(DepartmentRepository departmentRepository,
+                                  UserService userService,
+                                  ModelMapper modelMapper) {
         this.departmentRepository = departmentRepository;
-        this.userRepository = userRepository;
         this.userService = userService;
         this.modelMapper = modelMapper;
     }

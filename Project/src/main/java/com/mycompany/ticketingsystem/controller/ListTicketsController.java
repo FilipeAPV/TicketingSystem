@@ -65,7 +65,7 @@ public class ListTicketsController {
     @GetMapping("/listTickets/{pageNum}")
     public String listTickets(@RequestParam(value = "list") String listType,
                               @PathVariable(name = "pageNum") int pageNum,
-                              Model model, HttpSession httpSession) {
+                              Model model, HttpSession httpSession) throws Exception {
 
         String message = null;
         String relationship = null;
@@ -92,6 +92,7 @@ public class ListTicketsController {
             listTicketsDTO = convertListDTO.convertListToListDTO(ticketPage.getContent(), TicketDTO.class);
 
         } else if (listType.equals("department")){
+
             Department userLoggedInDepartment = ticketService.getDepartmentName(userLoggedIn);
             String departmentName = userLoggedInDepartment.getName();
             listOfUserDTOInsideDepartment = convertListDTO.convertListToListDTO(userService.findAllUsersInsideOneDepartment(userLoggedInDepartment), UserDTO.class);
@@ -139,14 +140,9 @@ public class ListTicketsController {
     public String editTicket(@RequestParam("ticketId") int ticketId,
                              @RequestParam("relationship") String relationshipWithUser,
                              @RequestParam("currentPage") int currentPage,
-                             Model model, HttpSession httpSession) {
+                             Model model, HttpSession httpSession) throws Exception {
 
-        Ticket ticketToEdit = new Ticket();
-        try {
-            ticketToEdit = ticketService.getTicketById(ticketId);
-        } catch (Exception e) {
-            System.out.println("eror");
-        }
+        Ticket ticketToEdit = ticketService.getTicketById(ticketId);
         TicketDTO ticketToEditDTO = modelMapper.map(ticketToEdit, TicketDTO.class);
 
         model.addAttribute("ticket", ticketToEditDTO);
@@ -163,7 +159,7 @@ public class ListTicketsController {
     public String editAssignee(@ModelAttribute("assigneeDTO") AssigneeDTO assigneeDTO,
                                @RequestParam("ticketId") int ticketId,
                                @RequestParam("relationship") String relationship,
-                               @RequestParam("currentPage") int currentPage) {
+                               @RequestParam("currentPage") int currentPage) throws Exception {
 
         String path = relationship;
 
@@ -189,14 +185,9 @@ public class ListTicketsController {
     @GetMapping("/closeTicket")
     public String deleteTicket(@RequestParam("ticketId") int id,
                                @RequestParam("relationship") String relationshipWithUser,
-                               @RequestParam("currentPage") int currentPage) {
-        Ticket ticketToClose;
-        try {
-            ticketToClose = ticketService.getTicketById(id);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "redirect:/dashboard";
-        }
+                               @RequestParam("currentPage") int currentPage) throws Exception {
+
+        Ticket ticketToClose = ticketService.getTicketById(id);
         ticketToClose.setStatus(Constants.TICKET_STATUS_CLOSED);
         ticketRepository.save(ticketToClose);
         return REDIRECT_TO_LISTICKETS + currentPage + "?list=" + relationshipWithUser;

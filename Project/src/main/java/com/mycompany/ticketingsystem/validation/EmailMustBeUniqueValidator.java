@@ -18,6 +18,7 @@ public class EmailMustBeUniqueValidator implements ConstraintValidator<EmailMust
 
     @Override
     public void initialize(EmailMustBeUnique emailMustBeUnique) {
+        // Method empty because I could not find use to it.
     }
 
     @Override
