@@ -6,6 +6,8 @@ With this project I want to apply the knowledge that I've acquired during my fir
 
 I'll try, as much as possible, to document the thought process that motivated my decisions.
 
+**Feel free to check a video presentation of the project: [Ticketing System](https://youtu.be/E8m34U5u2V4)**
+
 ## Technologies / Projects Used
 
 - Thymeleaf
