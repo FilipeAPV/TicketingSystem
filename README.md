@@ -26,8 +26,7 @@ I'll try, as much as possible, to document the thought process that motivated my
 
 - Ticket
 
-  - 4 status: Open, Delivered, Closed and Invalid
-  - The user needs to be able to select the department that he thinks is concerned by the ticket.
+  - 2 status: Open and Closed.
   - All participants should be able to comment on the ticket and all the comments need to be recorded.
 
 - Authentication & Authorization
@@ -35,8 +34,8 @@ I'll try, as much as possible, to document the thought process that motivated my
   - Roles: anonymous, user, superuser, admin
     - anonymous: access register form
     - user: open tickets, list tickets opened by himself, update and delete these.
-    - superuser: assign tickets, comment on all tickets assigned to his department, change assignee.
-    - admin: view all tickets from all departments, classify tickets as invalid, determine department superusers
+    - superuser: assign tickets to users inside his department, comment on those tickets and change assignee.
+    - admin: view all tickets from all departments, assign tickets to superusers, determine department superusers.
 
 - Auditing
 
@@ -49,5 +48,5 @@ I'll try, as much as possible, to document the thought process that motivated my
   - Form fields need to be validated
 
 - List of items (Users, Messages, etc)
-  - List tickets per assignee, department,
+  - List tickets per assignee, department.
   - Need to be easily sorted and offer pagination
