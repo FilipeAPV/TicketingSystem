@@ -60,51 +60,24 @@ public class UserService {
 
     public boolean changeRoleToSuperUser(SuperUserDTO superUserDTO, int departmentId) throws Exception {
         boolean isSaved = false;
+
         User userToAddSuperUserRole = new User();
-        User userToRemoveSuperUserRole = new User();
         Department departmentToFecthSuperUser = new Department();
 
-        Optional<User> userToAddSuperUserRoleOpt = userRepository.findById(superUserDTO.getId());
-
-            if (userToAddSuperUserRoleOpt.isPresent()) {
-                userToAddSuperUserRole = userToAddSuperUserRoleOpt.get();
-            } else {
-                throw new Exception("User with id: " + superUserDTO.getId() + " not found");
-            }
+        userToAddSuperUserRole = getTheNewSuperUser(superUserDTO.getId());
+        departmentToFecthSuperUser = getTheDepartment(departmentId);
 
         userToAddSuperUserRole.setRole(Constants.ROLE_SUPERUSER);
         User tempUser = userRepository.save(userToAddSuperUserRole);
         log.info(" | User " + userToAddSuperUserRole.getEmail() + " promoted to SUPER_USER");
 
-        isSaved = (tempUser.getId() > 0);
-
-        Optional<Department> departmentToFecthSuperUserOpt = departmentRepository.findById(departmentId);
-
-            if (departmentToFecthSuperUserOpt.isPresent()) {
-                departmentToFecthSuperUser = departmentToFecthSuperUserOpt.get();
-            } else {
-                throw new Exception("Department with id: " + departmentId + " not found");
-            }
-
-        Optional<User> userToRemoveSuperUserRoleOpt = userRepository.findById(departmentToFecthSuperUser.getSuperUserId().getId());
-
-            if (userToRemoveSuperUserRoleOpt.isPresent()) {
-                userToRemoveSuperUserRole = userToRemoveSuperUserRoleOpt.get();
-            } else {
-                throw new Exception("User with id: " + departmentToFecthSuperUser.getSuperUserId() + " not found");
-            }
-
-        userToRemoveSuperUserRole.setRole(Constants.ROLE_USER);
-        User tempUser2 = userRepository.save(userToRemoveSuperUserRole);
-        log.info(" | User " + userToRemoveSuperUserRole.getEmail() + " new role is ROLE_USER");
-
-        isSaved = (false) ? false : (tempUser2.getId() > 0);
+        removeSuperUserRole(departmentToFecthSuperUser);
 
         departmentToFecthSuperUser.setSuperUserId(userToAddSuperUserRole);
         Department tempDepartment = departmentRepository.save(departmentToFecthSuperUser);
-        log.info(" | Department " + departmentToFecthSuperUser.getName() + " new SUPERUSER is " + userToAddSuperUserRole.getEmail());
+        log.info(" | Department " + departmentToFecthSuperUser.getName() + " new SUPER_USER is " + userToAddSuperUserRole.getEmail());
 
-        isSaved = (false) ? false : (tempDepartment.getId() != 0);
+        isSaved = (tempUser.getId() >0 && tempDepartment.getId()>0);
 
         return isSaved;
     }
@@ -112,4 +85,48 @@ public class UserService {
     public List<User> findAllUsersInsideOneDepartment(Department departmentName) {
         return userRepository.findByDepartment(departmentName);
     }
+
+    private User getTheNewSuperUser(int newSuperUserId) throws Exception {
+        Optional<User> userToAddSuperUserRoleOpt = userRepository.findById(newSuperUserId);
+
+        if (userToAddSuperUserRoleOpt.isPresent()) {
+            return  userToAddSuperUserRoleOpt.get();
+        } else {
+            throw new Exception("User with id: " + newSuperUserId + " not found");
+        }
+    }
+
+    private Department getTheDepartment(int departmentId) throws Exception {
+        Optional<Department> departmentToFecthSuperUserOpt = departmentRepository.findById(departmentId);
+
+        if (departmentToFecthSuperUserOpt.isPresent()) {
+            return  departmentToFecthSuperUserOpt.get();
+        } else {
+            throw new Exception("Department with id: " + departmentId + " not found");
+        }
+    }
+
+    private void removeSuperUserRole(Department department) throws Exception {
+
+        if (department.getSuperUserId() == null) {
+            log.info(" | Department " + department.getName() + " didn't have a super user assigned");
+            return;
+        }
+
+        Optional<User> userToRemoveSuperUserRoleOpt = userRepository.findById(department.getSuperUserId().getId());
+        User userToRemoveSuperUserRole = null;
+
+        if (userToRemoveSuperUserRoleOpt.isPresent()) {
+            userToRemoveSuperUserRole = userToRemoveSuperUserRoleOpt.get();
+            userToRemoveSuperUserRole.setRole(Constants.ROLE_USER);
+            User tempUser2 = userRepository.save(userToRemoveSuperUserRole);
+            log.info(" | User " + userToRemoveSuperUserRole.getEmail() + " new role is ROLE_USER");
+
+        } else {
+            throw new Exception("User with id: " + department.getSuperUserId().getId() + " not found");
+        }
+    }
+
+
+
 }
