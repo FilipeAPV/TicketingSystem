@@ -4,8 +4,8 @@ create database ticketingsystem;
 use ticketingsystem;*/
 
 CREATE TABLE IF NOT EXISTS `users` (
-                                       `user_id` int AUTO_INCREMENT PRIMARY KEY,
-                                       `first_name` varchar(100) NOT NULL,
+   `user_id` int AUTO_INCREMENT PRIMARY KEY,
+   `first_name` varchar(100) NOT NULL,
     `last_name` varchar(100) NOT NULL,
     `job_title` varchar(100) NOT NULL,
     `email` varchar(100) NOT NULL,

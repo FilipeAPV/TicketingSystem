@@ -58,6 +58,24 @@ public class User extends BaseEntity implements Serializable {
 
     private static Logger log = LoggerFactory.getLogger(User.class);
 
+    public User() {}
+
+    public User(int id, String firstName, String lastName, String jobTitle, String email, String confirmEmail, String manager, String password, String confirmPassword, String role, Department department, Set<Ticket> createdTicketsList, Set<Ticket> assignedTicketsList) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.jobTitle = jobTitle;
+        this.email = email;
+        this.confirmEmail = confirmEmail;
+        this.manager = manager;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
+        this.role = role;
+        this.department = department;
+        this.createdTicketsList = createdTicketsList;
+        this.assignedTicketsList = assignedTicketsList;
+    }
+
     public int getId() {
         return id;
     }

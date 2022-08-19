@@ -40,7 +40,6 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Constants.ROLE_USER);
 
-
         user = userRepository.save(user);
         if (user.getId() > 0) {
             isSaved = true;
